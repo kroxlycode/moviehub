@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import GitHubButton from './components/GitHubButton';
 import MoviesPage from './pages/MoviesPage';
 import TVShowsPage from './pages/TVShowsPage';
-import PeoplePage from './pages/PeoplePage';
+import ActorsPage from './pages/PeoplePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
@@ -188,7 +188,7 @@ const AppContent: React.FC = () => {
         return <TVShowsPage onTVShowClick={(tvShow) => handleItemClick(tvShow, 'tv')} onPlayTrailer={handlePlayTrailer} />;
       
       case 'people':
-        return <PeoplePage onPersonClick={(person) => handleItemClick(person, 'person')} />;
+        return <ActorsPage onActorClick={(person) => handleItemClick(person, 'person')} />;
       
       case 'search':
         return searchQuery ? (
