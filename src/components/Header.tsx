@@ -16,9 +16,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onIt
 
   const navItems = [
     { id: 'home', label: 'Ana Sayfa', icon: Home },
-    { id: 'movies', label: 'Filmler', icon: Film },
-    { id: 'tv', label: 'Diziler', icon: Tv },
-    { id: 'people', label: 'Oyuncular', icon: User },
+    { id: 'filmler', label: 'Filmler', icon: Film },
+    { id: 'diziler', label: 'Diziler', icon: Tv },
+    { id: 'oyuncular', label: 'Oyuncular', icon: User },
   ];
 
   return (
