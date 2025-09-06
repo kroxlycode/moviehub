@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { X, Play, Volume2 } from 'lucide-react';
 
 interface TrailerModalProps {
@@ -11,6 +11,19 @@ interface TrailerModalProps {
 const TrailerModal: React.FC<TrailerModalProps> = ({ isOpen, onClose, videoKey, title }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Modal açıldığında loading'i true yap
+  useEffect(() => {
+    if (isOpen) {
+      setIsLoading(true);
+    }
+  }, [isOpen, videoKey]);
+
+  // iframe yüklendiğinde loading'i false yap
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -86,15 +99,18 @@ const TrailerModal: React.FC<TrailerModalProps> = ({ isOpen, onClose, videoKey, 
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            onLoad={handleIframeLoad}
           />
           
-          {/* Loading Overlay */}
-          <div className="absolute inset-0 bg-gray-900 flex items-center justify-center">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-gray-300">Fragman yükleniyor...</p>
+          {/* Loading Overlay - sadece yüklenirken göster */}
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-900 flex items-center justify-center z-10">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-300">Fragman yükleniyor...</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Controls */}

@@ -41,11 +41,11 @@ const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onIt
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md mx-4">
+          {/* Search Bar - Desktop Only */}
+          <div className="hidden md:flex flex-1 max-w-md mx-4">
             <SearchDropdown 
               onItemClick={onItemClick} 
-              onSearchPageClick={() => onNavigate('search')}
+              onSearchPageClick={onSearch}
             />
           </div>
 
@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onIt
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden px-4 pb-4">
+        <div className="md:hidden mt-4 px-4 pb-4">
           <SearchDropdown
             onItemClick={onItemClick}
             onSearchPageClick={onSearch}

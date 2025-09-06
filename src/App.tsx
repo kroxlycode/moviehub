@@ -8,6 +8,7 @@ import GitHubButton from './components/GitHubButton';
 import MoviesPage from './pages/MoviesPage';
 import TVShowsPage from './pages/TVShowsPage';
 import PeoplePage from './pages/PeoplePage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
 import TrailerModal from './components/TrailerModal';
@@ -84,7 +85,7 @@ const AppContent: React.FC = () => {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    // Implement search functionality
+    setCurrentPage('search');
   };
 
   const handleNavigate = (page: string) => {
@@ -188,6 +189,16 @@ const AppContent: React.FC = () => {
       
       case 'people':
         return <PeoplePage onPersonClick={(person) => handleItemClick(person, 'person')} />;
+      
+      case 'search':
+        return searchQuery ? (
+          <SearchResultsPage 
+            query={searchQuery}
+            onBack={() => setCurrentPage('home')}
+            onItemClick={handleItemClick}
+            onPlayTrailer={handlePlayTrailer}
+          />
+        ) : null;
       
       case 'movie-detail':
         return selectedMovieId ? (
