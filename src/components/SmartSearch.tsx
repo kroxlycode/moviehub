@@ -46,7 +46,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
   
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Web Speech API setup
   useEffect(() => {
@@ -170,7 +170,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
 
   // Debounced search
   useEffect(() => {
-    if (debounceRef.current) {
+    if (debounceRef.current !== null) {
       clearTimeout(debounceRef.current);
     }
 
@@ -179,8 +179,9 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
     }, 300);
 
     return () => {
-      if (debounceRef.current) {
+      if (debounceRef.current !== null) {
         clearTimeout(debounceRef.current);
+        debounceRef.current = null;
       }
     };
   }, [query]);
