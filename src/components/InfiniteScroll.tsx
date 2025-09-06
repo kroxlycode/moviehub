@@ -143,7 +143,6 @@ function InfiniteScroll<T extends { id: number }>({
         ))}
       </StaggerContainer>
 
-      {/* Loading indicator */}
       {loading && (
         <div className="mt-8">
           {loadingComponent || (
@@ -163,7 +162,6 @@ function InfiniteScroll<T extends { id: number }>({
         </div>
       )}
 
-      {/* Load more trigger */}
       {hasMore && !loading && (
         <div ref={observerRef} className="h-10 flex items-center justify-center">
           <motion.div
@@ -174,7 +172,6 @@ function InfiniteScroll<T extends { id: number }>({
         </div>
       )}
 
-      {/* End message */}
       {!hasMore && items.length > 0 && (
         <FadeIn>
           <div className="text-center py-8 text-gray-500">

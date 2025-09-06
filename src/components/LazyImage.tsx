@@ -62,7 +62,6 @@ const LazyImage: React.FC<LazyImageProps> = ({
 
   return (
     <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
-      {/* Placeholder */}
       <motion.div
         className="absolute inset-0 bg-gray-800 flex items-center justify-center"
         initial={{ opacity: 1 }}
@@ -89,7 +88,6 @@ const LazyImage: React.FC<LazyImageProps> = ({
         )}
       </motion.div>
 
-      {/* Error State */}
       {hasError && (
         <motion.div
           className="absolute inset-0 bg-gray-800 flex items-center justify-center"
@@ -108,7 +106,6 @@ const LazyImage: React.FC<LazyImageProps> = ({
         </motion.div>
       )}
 
-      {/* Actual Image */}
       {isInView && (
         <motion.img
           ref={imgRef}
@@ -126,7 +123,6 @@ const LazyImage: React.FC<LazyImageProps> = ({
         />
       )}
 
-      {/* Loading Animation */}
       {isInView && !isLoaded && !hasError && (
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.div

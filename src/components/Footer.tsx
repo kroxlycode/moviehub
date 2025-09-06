@@ -7,7 +7,6 @@ const Footer: React.FC = () => {
     <footer className="bg-gradient-to-r from-primary/95 to-dark/95 backdrop-blur-md border-t border-gray-custom/20 mt-16">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand Section */}
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center space-x-2 mb-4">
               <div className="bg-gradient-to-r from-secondary to-accent p-2 rounded-lg group-hover:scale-105 transition-transform">
@@ -20,22 +19,17 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Developer Section */}
           <div className="flex flex-col items-center">
             <div className="flex items-center space-x-2 mb-4">
-              <Heart className="w-4 h-4 text-red-500" />
-              <span className="text-gray-300 text-sm">Developed by</span>
+              <span className="text-gray-300 text-sm">dev by kroxly</span>
             </div>
             <div className="text-center">
-              <h4 className="text-white font-semibold text-lg mb-1">Kroxly</h4>
               <div className="flex items-center justify-center space-x-1 mt-2">
-                <Code className="w-3 h-3 text-accent" />
                 <span className="text-accent text-xs font-medium">React • TypeScript • Node.js</span>
               </div>
             </div>
           </div>
 
-          {/* Links Section */}
           <div className="flex flex-col items-center md:items-end">
             <h4 className="text-white font-semibold mb-4">Bağlantılar</h4>
             <div className="space-y-2 text-center md:text-right">
@@ -51,7 +45,6 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Section */}
         <div className="border-t border-gray-custom/20 mt-8 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">

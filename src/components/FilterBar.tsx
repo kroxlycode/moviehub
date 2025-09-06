@@ -95,7 +95,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ type, onFilterChange, loading }) 
 
       {isOpen && (
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Genre Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Tür
@@ -114,7 +113,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ type, onFilterChange, loading }) 
             </select>
           </div>
 
-          {/* Year Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center">
               <Calendar className="w-4 h-4 mr-1" />
@@ -134,7 +132,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ type, onFilterChange, loading }) 
             </select>
           </div>
 
-          {/* Sort By */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Sıralama
@@ -152,7 +149,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ type, onFilterChange, loading }) 
             </select>
           </div>
 
-          {/* Rating Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center">
               <Star className="w-4 h-4 mr-1" />
@@ -170,7 +166,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ type, onFilterChange, loading }) 
             </select>
           </div>
 
-          {/* Runtime Filter (Movies only) */}
           {type === 'movie' && (
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center">

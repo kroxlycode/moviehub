@@ -138,7 +138,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Türler */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Türler
@@ -158,7 +157,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           </div>
         </div>
 
-        {/* Yıl */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Yıl
@@ -175,7 +173,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           </select>
         </div>
 
-        {/* IMDB Puanı */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Minimum Puan: {filters.rating}/10
@@ -196,7 +193,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           </div>
         </div>
 
-        {/* Süre (sadece filmler için) */}
         {mediaType === 'movie' && (
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -225,7 +221,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           </div>
         )}
 
-        {/* Sıralama */}
         <div className={mediaType === 'tv' ? 'md:col-span-2 lg:col-span-1' : ''}>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Sıralama
@@ -244,7 +239,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         </div>
       </div>
 
-      {/* Aktif Filtreler */}
       {(filters.genres.length > 0 || filters.year || filters.rating > 0) && (
         <div className="mt-4 pt-4 border-t border-gray-700">
           <div className="flex flex-wrap gap-2">

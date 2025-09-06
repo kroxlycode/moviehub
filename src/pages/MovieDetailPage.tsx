@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users, Film } from 'lucide-react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft, Play, Share2, Star, Calendar, Clock, Globe, Users, Film } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
 
 interface MovieDetailPageProps {
-  movieId: number;
-  onBack: () => void;
-  onPlayTrailer: (movie: Movie) => void;
+  onBack?: () => void;
 }
 
-const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPlayTrailer }) => {
+const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ onBack }) => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const movieId = parseInt(id || '0', 10);
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [cast, setCast] = useState<Cast[]>([]);
   const [crew, setCrew] = useState<Crew[]>([]);
@@ -58,6 +61,14 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
       window.open(`https://www.youtube.com/watch?v=${trailerKey}`, '_blank');
     } else {
       toast.info('Bu film için fragman bulunamadı');
+    }
+  };
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate(-1);
     }
   };
 
@@ -140,7 +151,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
           <div className="container mx-auto px-4">
             {/* Back Button */}
             <button
-              onClick={onBack}
+              onClick={handleBack}
               className="flex items-center space-x-2 text-white hover:text-secondary transition-colors mb-8"
             >
               <ArrowLeft className="w-5 h-5" />

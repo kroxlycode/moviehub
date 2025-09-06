@@ -45,11 +45,9 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-white">{title}</h2>
           
-          {/* Navigation Buttons */}
           <div className="hidden md:flex space-x-2">
             <button
               onClick={() => scroll('left')}
@@ -68,7 +66,6 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
           </div>
         </div>
 
-        {/* Scrollable Content */}
         <div className="relative">
           <div
             ref={scrollRef}
@@ -76,12 +73,10 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {loading ? (
-              // Loading skeletons
               Array.from({ length: 8 }).map((_, index) => (
                 <SkeletonCard key={index} />
               ))
             ) : items && items.length > 0 ? (
-              // Actual content
               items.map((item) => (
                 <MovieCard
                   key={item.id}
@@ -92,14 +87,12 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
                 />
               ))
             ) : (
-              // Empty state
               <div className="w-full text-center py-12">
                 <p className="text-gray-400 text-lg">İçerik bulunamadı</p>
               </div>
             )}
           </div>
 
-          {/* Gradient Overlays for scroll indication */}
           {!loading && items && items.length > 0 && (
             <>
               <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-dark to-transparent pointer-events-none"></div>

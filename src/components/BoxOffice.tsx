@@ -97,7 +97,6 @@ const BoxOffice: React.FC<BoxOfficeProps> = ({ movieId }) => {
         <h3 className="text-lg font-semibold text-white mb-6">Gişe Bilgileri</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Budget */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-blue-400">
               <DollarSign size={18} />
@@ -113,7 +112,6 @@ const BoxOffice: React.FC<BoxOfficeProps> = ({ movieId }) => {
             )}
           </div>
 
-          {/* Revenue */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-green-400">
               <TrendingUp size={18} />
@@ -129,7 +127,6 @@ const BoxOffice: React.FC<BoxOfficeProps> = ({ movieId }) => {
             )}
           </div>
 
-          {/* Profit */}
           {profit !== null && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-yellow-400">
@@ -145,7 +142,6 @@ const BoxOffice: React.FC<BoxOfficeProps> = ({ movieId }) => {
             </div>
           )}
 
-          {/* ROI */}
           {roi !== null && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-purple-400">
@@ -162,7 +158,6 @@ const BoxOffice: React.FC<BoxOfficeProps> = ({ movieId }) => {
           )}
         </div>
 
-        {/* Additional Info */}
         <div className="mt-6 pt-6 border-t border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
@@ -188,7 +183,6 @@ const BoxOffice: React.FC<BoxOfficeProps> = ({ movieId }) => {
           </div>
         </div>
 
-        {/* Performance Indicator */}
         {boxOfficeData.budget > 0 && boxOfficeData.revenue > 0 && (
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm mb-2">

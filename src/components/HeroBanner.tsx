@@ -55,7 +55,6 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
 
   return (
     <div className="relative h-[70vh] overflow-hidden">
-      {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
         style={{ backgroundImage: `url(${backdropUrl})` }}
@@ -63,7 +62,6 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
         <div className="absolute inset-0 bg-gradient-overlay"></div>
       </div>
 
-      {/* Content */}
       <div className="relative z-10 h-full flex items-center">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
@@ -113,7 +111,6 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
         </div>
       </div>
 
-      {/* Navigation Arrows */}
       {items.length > 1 && (
         <>
           <button
@@ -132,7 +129,6 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
         </>
       )}
 
-      {/* Dots Indicator */}
       {items.length > 1 && (
         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20">
           <div className="flex space-x-2">
@@ -151,7 +147,6 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
         </div>
       )}
 
-      {/* Auto-play indicator */}
       {isAutoPlaying && items.length > 1 && (
         <div className="absolute top-4 right-4 z-20">
           <div className="bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm">

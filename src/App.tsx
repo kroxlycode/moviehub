@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
 import HorizontalScroll from './components/HorizontalScroll';
 import Layout from './components/Layout';
 import Footer from './components/Footer';
 import GitHubButton from './components/GitHubButton';
+import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
 import TVShowsPage from './pages/TVShowsPage';
-import ActorsPage from './pages/PeoplePage';
+import PeoplePage from './pages/PeoplePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
-import ActorDetailPage from './pages/ActorDetailPage';
+import PersonDetailPage from './pages/PersonDetailPage';
 import TrailerModal from './components/TrailerModal';
 import { Movie, TVShow, Person, tmdbApi, setApiLanguage } from './services/tmdbApi';
 import { ContentLanguageProvider, useContentLanguage, getApiLanguageCode } from './contexts/LanguageContext';
@@ -280,11 +282,24 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <ContentLanguageProvider>
-        <AppContent />
-      </ContentLanguageProvider>
-    </ThemeProvider>
+    <Router>
+      <ThemeProvider>
+        <ContentLanguageProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/filmler" element={<MoviesPage />} />
+            <Route path="/film/:id/:title?" element={<MovieDetailPage />} />
+            <Route path="/diziler" element={<TVShowsPage />} />
+            <Route path="/dizi/:id/:title?" element={<TVShowDetailPage />} />
+            <Route path="/oyuncular" element={<PeoplePage />} />
+            <Route path="/oyuncu/:id/:name?" element={<PersonDetailPage />} />
+            <Route path="/ara" element={<SearchResultsPage />} />
+              <SearchResultsPage onBack={() => window.history.back()} />
+            } />
+          </Routes>
+        </ContentLanguageProvider>
+      </ThemeProvider>
+    </Router>
   );
 };
 

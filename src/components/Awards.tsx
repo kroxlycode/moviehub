@@ -152,7 +152,6 @@ const Awards: React.FC<AwardsProps> = ({ movieId, tvId, mediaType }) => {
       <div className="bg-gray-800 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-white mb-6">Ödüller ve Nominasyonlar</h3>
         
-        {/* Statistics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="text-center p-4 bg-gray-700 rounded-lg">
             <div className="text-2xl font-bold text-yellow-400">{wonAwards.length}</div>
@@ -174,7 +173,6 @@ const Awards: React.FC<AwardsProps> = ({ movieId, tvId, mediaType }) => {
           </div>
         </div>
 
-        {/* Won Awards */}
         {wonAwards.length > 0 && (
           <div className="mb-8">
             <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -208,7 +206,6 @@ const Awards: React.FC<AwardsProps> = ({ movieId, tvId, mediaType }) => {
           </div>
         )}
 
-        {/* Nominations */}
         {nominations.length > 0 && (
           <div>
             <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -242,7 +239,6 @@ const Awards: React.FC<AwardsProps> = ({ movieId, tvId, mediaType }) => {
           </div>
         )}
 
-        {/* Note */}
         <div className="mt-6 pt-4 border-t border-gray-700">
           <p className="text-xs text-gray-500 text-center">
             * Ödül bilgileri harici kaynaklardan alınmaktadır ve güncel olmayabilir.

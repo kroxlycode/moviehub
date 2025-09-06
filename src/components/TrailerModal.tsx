@@ -102,34 +102,6 @@ const TrailerModal: React.FC<TrailerModalProps> = ({ isOpen, onClose, videoKey, 
             onLoad={handleIframeLoad}
           />
         </div>
-
-        {/* Controls */}
-        <div className="p-4 bg-gray-800 border-t border-gray-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
-                <Play className="w-4 h-4" />
-                <span>Oynat</span>
-              </button>
-              
-              <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors">
-                <Volume2 className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-400">YouTube'da İzle</span>
-              <a
-                href={`https://www.youtube.com/watch?v=${videoKey}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
-              >
-                Aç
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
