@@ -1,9 +1,7 @@
 import React from 'react';
 import { Heart, Code, Github, Film } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer: React.FC = () => {
-  const { t } = useLanguage();
 
   return (
     <footer className="bg-gradient-to-r from-primary/95 to-dark/95 backdrop-blur-md border-t border-gray-custom/20 mt-16">
@@ -18,7 +16,7 @@ const Footer: React.FC = () => {
               <h3 className="text-lg font-bold text-white">MovieHub</h3>
             </div>
             <p className="text-gray-300 text-sm text-center md:text-left">
-              {t('footer.description')}
+              Film ve dizi dünyasını keşfedin. En popüler yapımları bulun ve favorilerinizi keşfedin.
             </p>
           </div>
 
@@ -39,7 +37,7 @@ const Footer: React.FC = () => {
 
           {/* Links Section */}
           <div className="flex flex-col items-center md:items-end">
-            <h4 className="text-white font-semibold mb-4">{t('footer.links')}</h4>
+            <h4 className="text-white font-semibold mb-4">Bağlantılar</h4>
             <div className="space-y-2 text-center md:text-right">
               <a
                 href="https://www.themoviedb.org/"

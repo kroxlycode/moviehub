@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ArrowLeft, Film, Tv, User } from 'lucide-react';
 import { Movie, TVShow, Person, tmdbApi, getImageUrl } from '../services/tmdbApi';
-import { useLanguage } from '../contexts/LanguageContext';
 import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
 
@@ -32,7 +31,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
   onItemClick, 
   onPlayTrailer 
 }) => {
-  const { t } = useLanguage();
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);

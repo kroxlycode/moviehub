@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Star, Film, Tv } from 'lucide-react';
 import { Person, Movie, TVShow, tmdbApi, getImageUrl } from '../services/tmdbApi';
-import { useLanguage } from '../contexts/LanguageContext';
 import GridLayout from '../components/GridLayout';
 
 interface ActorDetailPageProps {
