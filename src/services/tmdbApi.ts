@@ -212,16 +212,33 @@ export interface ApiResponse<T> {
 
 // Utility function to build API URLs
 const buildUrl = (endpoint: string, params: Record<string, any> = {}): string => {
-  const url = new URL(`${BASE_URL}${endpoint}`);
-  url.searchParams.append('api_key', API_KEY);
-  
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      url.searchParams.append(key, value.toString());
+  try {
+    // Ensure BASE_URL ends with a slash and endpoint doesn't start with one
+    const base = BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL;
+    const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    
+    const url = new URL(`${base}${path}`);
+    
+    // Always include the API key
+    url.searchParams.append('api_key', API_KEY);
+    
+    // Include language parameter if not already specified
+    if (!params.language && currentApiLanguage) {
+      url.searchParams.append('language', currentApiLanguage);
     }
-  });
-  
-  return url.toString();
+    
+    // Add other parameters
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        url.searchParams.append(key, value.toString());
+      }
+    });
+    
+    return url.toString();
+  } catch (error) {
+    console.error('Error building URL:', { endpoint, params, error });
+    throw new Error(`Failed to build URL for endpoint: ${endpoint}`);
+  }
 };
 
 // Utility function to build image URLs
@@ -376,18 +393,42 @@ export const tmdbApi = {
 
   // Person details
   getPersonDetails: async (id: number): Promise<Person> => {
-    const response = await fetch(buildUrl(`/person/${id}`, { language: currentApiLanguage }));
-    return response.json();
+    try {
+      const response = await fetch(buildUrl(`/person/${id}`, { append_to_response: 'images,combined_credits' }));
+      if (!response.ok) {
+        throw new Error(`Failed to fetch person details: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error in getPersonDetails:', error);
+      throw error;
+    }
   },
 
   getPersonMovieCredits: async (id: number): Promise<{ cast: Movie[]; crew: Movie[] }> => {
-    const response = await fetch(buildUrl(`/person/${id}/movie_credits`, { language: currentApiLanguage }));
-    return response.json();
+    try {
+      const response = await fetch(buildUrl(`/person/${id}/movie_credits`));
+      if (!response.ok) {
+        throw new Error(`Failed to fetch person movie credits: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error in getPersonMovieCredits:', error);
+      throw error;
+    }
   },
 
   getPersonTVCredits: async (id: number): Promise<{ cast: TVShow[]; crew: TVShow[] }> => {
-    const response = await fetch(buildUrl(`/person/${id}/tv_credits`, { language: currentApiLanguage }));
-    return response.json();
+    try {
+      const response = await fetch(buildUrl(`/person/${id}/tv_credits`));
+      if (!response.ok) {
+        throw new Error(`Failed to fetch person TV credits: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error in getPersonTVCredits:', error);
+      throw error;
+    }
   },
 
   // Get movie videos (trailers) with language preference

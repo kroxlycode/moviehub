@@ -23,25 +23,39 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const fetchPersonDetails = async () => {
+      if (!personId) {
+        setError('Geçersiz oyuncu kimliği');
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
+        setError(null);
         
         // Fetch person details
         const personData = await tmdbApi.getPersonDetails(personId);
         
-        // Fetch movie and TV credits separately
+        // Fetch movie and TV credits in parallel
         const [movieCredits, tvCredits] = await Promise.all([
-          tmdbApi.getPersonMovieCredits(personId),
-          tmdbApi.getPersonTVCredits(personId)
+          tmdbApi.getPersonMovieCredits(personId).catch(err => {
+            console.error('Error fetching movie credits:', err);
+            return { cast: [] };
+          }),
+          tmdbApi.getPersonTVCredits(personId).catch(err => {
+            console.error('Error fetching TV credits:', err);
+            return { cast: [] };
+          })
         ]);
         
         setPerson(personData);
         
         // Process movie credits
-        const personMovies = movieCredits.cast
+        const personMovies = (movieCredits?.cast || [])
           .map((movie: Movie) => ({
             ...movie,
             release_date: movie.release_date || '',
@@ -55,7 +69,7 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
           });
         
         // Process TV show credits
-        const personTVShows = tvCredits.cast
+        const personTVShows = (tvCredits?.cast || [])
           .map((show: TVShow) => ({
             ...show,
             first_air_date: show.first_air_date || '',
@@ -72,14 +86,13 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
         setTVShows(personTVShows);
       } catch (error) {
         console.error('Error fetching person details:', error);
+        setError('Oyuncu bilgileri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
       } finally {
         setLoading(false);
       }
     };
     
-    if (personId) {
-      fetchPersonDetails();
-    }
+    fetchPersonDetails();
   }, [personId]);
 
   if (loading) {
@@ -87,6 +100,33 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
       <div className="min-h-screen bg-gray-900 text-white p-4">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white p-4">
+        <div className="container mx-auto py-8">
+          <button 
+            onClick={onBack}
+            className="flex items-center text-blue-400 hover:text-blue-300 mb-6"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Geri Dön
+          </button>
+          
+          <div className="bg-gray-800 rounded-lg p-6 text-center">
+            <h2 className="text-2xl font-bold text-red-400 mb-4">Hata Oluştu</h2>
+            <p className="text-gray-300 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white"
+            >
+              Tekrar Dene
+            </button>
+          </div>
         </div>
       </div>
     );
