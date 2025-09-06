@@ -101,16 +101,6 @@ const TrailerModal: React.FC<TrailerModalProps> = ({ isOpen, onClose, videoKey, 
             allowFullScreen
             onLoad={handleIframeLoad}
           />
-          
-          {/* Loading Overlay - sadece yüklenirken göster */}
-          {isLoading && (
-            <div className="absolute inset-0 bg-gray-900 flex items-center justify-center z-10">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-gray-300">Fragman yükleniyor...</p>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Controls */}

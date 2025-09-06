@@ -172,7 +172,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 👨‍💻 Geliştirici
 
-**Kroxly** - Full Stack Developer  
+**Kroxly** - Web Designer & Developer 
 *React • TypeScript • Node.js*
 
 - 🌐 GitHub: [@kroxlycode](https://github.com/kroxlycode)

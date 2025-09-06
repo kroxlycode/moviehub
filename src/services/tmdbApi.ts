@@ -1,4 +1,4 @@
-const API_KEY = process.env.REACT_APP_TMDB_API_KEY || '4244d4926bd58d76e371d244d7dade02';
+const API_KEY = process.env.REACT_APP_TMDB_API_KEY || 'YOUR_API_KEY';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 // Language support

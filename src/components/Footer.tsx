@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
             </div>
             <div className="text-center">
               <h4 className="text-white font-semibold text-lg mb-1">Kroxly</h4>
-              <p className="text-gray-400 text-xs">Full Stack Developer</p>
+              <p className="text-gray-400 text-xs">Web Designer & Developer</p>
               <div className="flex items-center justify-center space-x-1 mt-2">
                 <Code className="w-3 h-3 text-accent" />
                 <span className="text-accent text-xs font-medium">React • TypeScript • Node.js</span>
