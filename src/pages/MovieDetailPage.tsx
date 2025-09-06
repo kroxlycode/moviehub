@@ -153,7 +153,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                   {movie.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-sm"
+                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm"
                     >
                       {genre.name}
                     </span>

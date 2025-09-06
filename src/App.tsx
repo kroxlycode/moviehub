@@ -15,6 +15,7 @@ import ActorDetailPage from './pages/ActorDetailPage';
 import TrailerModal from './components/TrailerModal';
 import { Movie, TVShow, Person, tmdbApi, setApiLanguage } from './services/tmdbApi';
 import { ContentLanguageProvider, useContentLanguage, getApiLanguageCode } from './contexts/LanguageContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const AppContent: React.FC = () => {
   const { contentLanguage } = useContentLanguage();
@@ -277,12 +278,14 @@ const AppContent: React.FC = () => {
   );
 };
 
-function App() {
+const App: React.FC = () => {
   return (
-    <ContentLanguageProvider>
-      <AppContent />
-    </ContentLanguageProvider>
+    <ThemeProvider>
+      <ContentLanguageProvider>
+        <AppContent />
+      </ContentLanguageProvider>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;

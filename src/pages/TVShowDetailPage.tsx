@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { TVShow, TVShowDetails, Cast, Crew, Season, Episode, tmdbApi, getImageUrl } from '../services/tmdbApi';
+import { FadeIn, SlideInLeft, SlideInRight, CardHover, StaggerContainer, StaggerItem } from '../components/AnimatedComponents';
+import LazyImage from '../components/LazyImage';
+import WatchProviders from '../components/WatchProviders';
+import MediaGallery from '../components/MediaGallery';
 
 interface TVShowDetailPageProps {
   tvShowId: number;
@@ -17,7 +21,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingEpisodes, setLoadingEpisodes] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'seasons' | 'cast' | 'crew' | 'similar'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'seasons' | 'cast' | 'crew' | 'similar' | 'media' | 'watch'>('overview');
   const [expandedSeasons, setExpandedSeasons] = useState<Set<number>>(new Set());
 
   useEffect(() => {
@@ -116,7 +120,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
       <div className="relative">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img
+          <LazyImage
             src={getImageUrl(tvShow.backdrop_path, 'backdrop', 'large')}
             alt={tvShow.name}
             className="w-full h-full object-cover"
@@ -127,6 +131,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
         {/* Content */}
         <div className="relative z-10 pt-20 pb-12">
           <div className="container mx-auto px-4">
+            <FadeIn>
             {/* Back Button */}
             <button
               onClick={onBack}
@@ -138,16 +143,18 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
 
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Poster */}
-              <div className="flex-shrink-0">
-                <img
-                  src={getImageUrl(tvShow.poster_path, 'poster', 'large')}
-                  alt={tvShow.name}
-                  className="w-80 h-auto rounded-2xl shadow-2xl mx-auto lg:mx-0"
-                />
-              </div>
+              <SlideInLeft className="flex-shrink-0">
+                <CardHover>
+                  <LazyImage
+                    src={getImageUrl(tvShow.poster_path, 'poster', 'large')}
+                    alt={tvShow.name}
+                    className="w-80 h-auto rounded-2xl shadow-2xl mx-auto lg:mx-0"
+                  />
+                </CardHover>
+              </SlideInLeft>
 
               {/* TV Show Info */}
-              <div className="flex-1 text-white">
+              <SlideInRight className="flex-1 text-white">
                 <h1 className="text-4xl lg:text-5xl font-bold mb-4">{tvShow.name}</h1>
                 
                 {tvShow.tagline && (
@@ -203,7 +210,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   {tvShow.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-sm"
+                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm"
                     >
                       {genre.name}
                     </span>
@@ -263,8 +270,9 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                     </div>
                   )}
                 </div>
-              </div>
+              </SlideInRight>
             </div>
+            </FadeIn>
           </div>
         </div>
       </div>
@@ -278,6 +286,8 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
               { id: 'seasons', label: 'Sezonlar' },
               { id: 'cast', label: 'Oyuncular' },
               { id: 'crew', label: 'Ekip' },
+              { id: 'media', label: 'Medya' },
+              { id: 'watch', label: 'Nerede İzlenir' },
               { id: 'similar', label: 'Benzer Diziler' }
             ].map((tab) => (
               <button
@@ -429,22 +439,24 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
           )}
 
           {activeTab === 'cast' && (
-            <div>
+            <FadeIn>
               <h2 className="text-2xl font-bold text-white mb-6">Oyuncular</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {cast.map((person) => (
-                  <div key={person.id} className="text-center">
-                    <img
-                      src={getImageUrl(person.profile_path, 'profile', 'medium')}
-                      alt={person.name}
-                      className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
-                    />
-                    <h4 className="text-white font-semibold text-sm">{person.name}</h4>
-                    <p className="text-gray-400 text-xs">{person.character}</p>
-                  </div>
+                  <StaggerItem key={person.id}>
+                    <CardHover className="text-center">
+                      <LazyImage
+                        src={getImageUrl(person.profile_path, 'profile', 'medium')}
+                        alt={person.name}
+                        className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
+                      />
+                      <h4 className="text-white font-semibold text-sm">{person.name}</h4>
+                      <p className="text-gray-400 text-xs">{person.character}</p>
+                    </CardHover>
+                  </StaggerItem>
                 ))}
-              </div>
-            </div>
+              </StaggerContainer>
+            </FadeIn>
           )}
 
           {activeTab === 'crew' && (
@@ -468,26 +480,46 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
             </div>
           )}
 
+          {activeTab === 'media' && (
+            <FadeIn>
+              <MediaGallery
+                tvId={tvShow.id}
+                mediaType="tv"
+              />
+            </FadeIn>
+          )}
+
+          {activeTab === 'watch' && (
+            <FadeIn>
+              <WatchProviders
+                tvId={tvShow.id}
+                mediaType="tv"
+              />
+            </FadeIn>
+          )}
+
           {activeTab === 'similar' && (
-            <div>
+            <FadeIn>
               <h2 className="text-2xl font-bold text-white mb-6">Benzer Diziler</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {similarTVShows.map((similarShow) => (
-                  <div key={similarShow.id} className="cursor-pointer group">
-                    <img
-                      src={getImageUrl(similarShow.poster_path, 'poster', 'medium')}
-                      alt={similarShow.name}
-                      className="w-full aspect-[2/3] object-cover rounded-lg mb-2 group-hover:scale-105 transition-transform"
-                    />
-                    <h4 className="text-white font-semibold text-sm line-clamp-2">{similarShow.name}</h4>
-                    <div className="flex items-center space-x-1 mt-1">
-                      <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                      <span className="text-gray-400 text-xs">{similarShow.vote_average.toFixed(1)}</span>
-                    </div>
-                  </div>
+                  <StaggerItem key={similarShow.id}>
+                    <CardHover className="cursor-pointer">
+                      <LazyImage
+                        src={getImageUrl(similarShow.poster_path, 'poster', 'medium')}
+                        alt={similarShow.name}
+                        className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
+                      />
+                      <h4 className="text-white font-semibold text-sm line-clamp-2">{similarShow.name}</h4>
+                      <div className="flex items-center space-x-1 mt-1">
+                        <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                        <span className="text-gray-400 text-xs">{similarShow.vote_average.toFixed(1)}</span>
+                      </div>
+                    </CardHover>
+                  </StaggerItem>
                 ))}
-              </div>
-            </div>
+              </StaggerContainer>
+            </FadeIn>
           )}
         </div>
       </div>
