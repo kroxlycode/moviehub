@@ -1,46 +1,218 @@
-# Getting Started with Create React App
+# 🎬 MovieHub - Film & Dizi Keşif Platformu
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern ve kullanıcı dostu çok dilli film & dizi keşif platformu. TheMovieDB API kullanarak güncel içerikler sunar.
 
-## Available Scripts
+![MovieHub Banner](https://via.placeholder.com/1200x400/1a1a2e/ffffff?text=MovieHub+-+Film+%26+Dizi+Platformu)
 
-In the project directory, you can run:
+## ✨ Özellikler
 
-### `npm start`
+### 🏠 Ana Sayfa
+- **Hero Banner**: Trend olan filmler ve diziler
+- **Kategoriler**: Popüler, En Çok Oylanan, Vizyondaki, Yakında Gelenler
+- **Horizontal Scroll**: Kolay gezinme ve keşif
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 📱 Sayfalar
+- **Filmler**: Grid layout, gelişmiş filtreleme, pagination
+- **Diziler**: Grid layout, gelişmiş filtreleme, pagination  
+- **Kişiler**: Oyuncular ve yönetmenler
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 🎭 Detay Sayfaları
+- **Film Detayları**: Tam bilgi, oyuncular, ekip, benzer filmler, fragman
+- **Dizi Detayları**: Sezonlar, bölümler, oyuncular, benzer diziler, fragman
+- **Kişi Detayları**: Filmografi ve biyografi *(yakında)*
 
-### `npm test`
+### 🔍 Arama & Filtreleme
+- **Anlık Arama**: Dropdown sonuçlar ile hızlı erişim
+- **Gelişmiş Filtreler**: Tür, yıl, puan bazlı filtreleme
+- **Debounced Search**: Performans optimizasyonu
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🌍 Çok Dilli Destek
+- **Türkçe/İngilizce**: Tam dil desteği
+- **API İçeriği**: Seçilen dilde film/dizi bilgileri
+- **UI Çevirileri**: Tüm arayüz metinleri
 
-### `npm run build`
+### 🎥 Fragman Sistemi
+- **YouTube Entegrasyonu**: Yerleşik fragman oynatıcı
+- **Modal Tasarım**: Kesintisiz izleme deneyimi
+- **Keyboard Shortcuts**: ESC ile kapatma
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠️ Teknolojiler
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Frontend**: React 18 + TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **API**: TheMovieDB (TMDb)
+- **Build Tool**: Create React App
+- **State Management**: React Hooks + Context API
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Kurulum
 
-### `npm run eject`
+1. **Projeyi klonlayın**
+```bash
+git clone https://github.com/kroxlycode/moviehub.git
+cd moviehub
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. **Bağımlılıkları yükleyin**
+```bash
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **API Anahtarını ayarlayın**
+- `.env.example` dosyasını `.env` olarak kopyalayın
+- [TheMovieDB](https://www.themoviedb.org/settings/api) üzerinden API anahtarı alın
+- `.env` dosyasına API anahtarınızı ekleyin:
+```env
+REACT_APP_TMDB_API_KEY=your_api_key_here
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+4. **Uygulamayı başlatın**
+```bash
+npm start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Uygulama http://localhost:3000 adresinde çalışacaktır.
 
-## Learn More
+## 📁 Proje Yapısı
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+src/
+├── components/          # Yeniden kullanılabilir bileşenler
+│   ├── Header.tsx       # Ana navigasyon + dil seçici
+│   ├── HeroBanner.tsx   # Ana banner slider
+│   ├── HorizontalScroll.tsx # Yatay kaydırma listeleri
+│   ├── MovieCard.tsx    # Film/dizi kartları
+│   ├── GridLayout.tsx   # Grid düzeni
+│   ├── FilterBar.tsx    # Filtreleme bileşeni
+│   ├── Pagination.tsx   # Sayfalama
+│   ├── SearchDropdown.tsx # Arama dropdown
+│   ├── TrailerModal.tsx # Fragman modal
+│   ├── Footer.tsx       # Alt bilgi
+│   └── GitHubButton.tsx # GitHub profil butonu
+├── pages/               # Sayfa bileşenleri
+│   ├── MoviesPage.tsx   # Filmler sayfası
+│   ├── TVShowsPage.tsx  # Diziler sayfası
+│   ├── PeoplePage.tsx   # Kişiler sayfası
+│   ├── MovieDetailPage.tsx # Film detay
+│   └── TVShowDetailPage.tsx # Dizi detay
+├── services/            # API servisleri
+│   └── tmdbApi.ts       # TheMovieDB API + dil desteği
+├── contexts/            # React Context'ler
+│   └── LanguageContext.tsx # Dil yönetimi
+└── types/               # TypeScript tipleri
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🎨 Tasarım Özellikleri
+
+- **Dark Theme**: Modern koyu tema
+- **Responsive**: Tüm cihazlarda uyumlu
+- **Smooth Animations**: Akıcı geçişler ve hover efektleri
+- **Modern UI**: Gradient'ler, shadow'lar ve glassmorphism
+- **Accessibility**: Keyboard navigation ve ARIA labels
+
+## 📱 Responsive Tasarım
+
+- **Desktop (1200px+)**: Full özellikli deneyim
+- **Tablet (768px-1199px)**: Optimize edilmiş layout
+- **Mobile (320px-767px)**: Touch-friendly arayüz
+
+## 🔧 Geliştirme
+
+### Mevcut Komutlar
+
+```bash
+npm start          # Geliştirme sunucusu (http://localhost:3000)
+npm run build      # Production build
+npm test           # Testleri çalıştır
+npm run eject      # CRA yapılandırmasını çıkar (dikkatli kullanın)
+```
+
+### Özellik Roadmap
+
+- [x] Çok dilli sistem (TR/EN)
+- [x] Film/Dizi detay sayfaları
+- [x] Fragman sistemi
+- [x] Arama ve filtreleme
+- [x] Footer ve branding
+- [ ] Kişi detay sayfası
+- [ ] Kullanıcı listeleri (Watchlist, Favorites)
+- [ ] Arama sonuçları sayfası
+- [ ] PWA desteği
+- [ ] Dark/Light theme toggle
+
+### Katkıda Bulunma
+
+1. Fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit edin (`git commit -m 'Add amazing feature'`)
+4. Push edin (`git push origin feature/amazing-feature`)
+5. Pull Request açın
+
+## 📊 Performans
+
+- **Lazy Loading**: Resimler için optimize edilmiş yükleme
+- **Debounced Search**: API çağrılarını optimize eder
+- **Code Splitting**: Sayfa bazlı kod bölünmesi *(yakında)*
+- **Caching**: API yanıtları için akıllı önbellekleme *(yakında)*
+
+## 🌟 Screenshots
+
+### Ana Sayfa
+![Ana Sayfa](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Ana+Sayfa+-+Hero+Banner+%26+Lists)
+
+### Film Detay
+![Film Detay](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Film+Detay+-+Tabs+%26+Info)
+
+### Dil Seçimi
+![Dil Seçimi](https://via.placeholder.com/400x300/1a1a2e/ffffff?text=TR+%2F+EN+Language+Toggle)
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+
+## 👨‍💻 Geliştirici
+
+**Kroxly** - Full Stack Developer  
+*React • TypeScript • Node.js*
+
+- 🌐 GitHub: [@kroxlycode](https://github.com/kroxlycode)
+- 📧 İletişim: GitHub profili üzerinden
+
+## 🙏 Teşekkürler
+
+- [TheMovieDB](https://www.themoviedb.org/) - Kapsamlı film/dizi API'si
+- [Lucide](https://lucide.dev/) - Güzel ve tutarlı icon kütüphanesi
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [React](https://reactjs.org/) - UI kütüphanesi
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+
+## 🚀 Deployment
+
+Projeyi Netlify, Vercel veya GitHub Pages üzerinde kolayca deploy edebilirsiniz:
+
+```bash
+npm run build
+# Build klasörünü hosting servisinize yükleyin
+```
+
+---
+
+⭐ **Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!**
+
+🔗 **Live Demo**: [MovieHub](https://moviehub-kroxly.netlify.app) *(yakında)*
+
+---
+
+*Made with ❤️ by Kroxly*mıştır.
+
+## 🤝 Katkıda Bulunma
+
+1. Fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit edin (`git commit -m 'Add amazing feature'`)
+4. Push edin (`git push origin feature/amazing-feature`)
+5. Pull Request açın
+
+## 📞 İletişim
+
+Herhangi bir sorunuz varsa, lütfen issue açın veya iletişime geçin.

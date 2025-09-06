@@ -1,0 +1,421 @@
+const API_KEY = process.env.REACT_APP_TMDB_API_KEY || '4244d4926bd58d76e371d244d7dade02';
+const BASE_URL = 'https://api.themoviedb.org/3';
+
+// Language support
+let currentLanguage = 'tr-TR';
+
+export const setLanguage = (lang: 'tr' | 'en') => {
+  currentLanguage = lang === 'tr' ? 'tr-TR' : 'en-US';
+};
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
+
+// Image size configurations
+export const IMAGE_SIZES = {
+  poster: {
+    small: 'w185',
+    medium: 'w342',
+    large: 'w500',
+    original: 'original'
+  },
+  backdrop: {
+    small: 'w300',
+    medium: 'w780',
+    large: 'w1280',
+    original: 'original'
+  },
+  profile: {
+    small: 'w45',
+    medium: 'w185',
+    large: 'h632',
+    original: 'original'
+  }
+};
+
+// Type definitions
+export interface Movie {
+  id: number;
+  title: string;
+  original_title: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  release_date: string;
+  vote_average: number;
+  vote_count: number;
+  popularity: number;
+  adult: boolean;
+  genre_ids: number[];
+  original_language: string;
+  video: boolean;
+}
+
+export interface TVShow {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  first_air_date: string;
+  vote_average: number;
+  vote_count: number;
+  genre_ids: number[];
+  original_language: string;
+  original_name: string;
+  popularity: number;
+  adult: boolean;
+}
+
+export interface TVShowDetails extends TVShow {
+  created_by: any[];
+  episode_run_time: number[];
+  genres: Genre[];
+  homepage: string;
+  in_production: boolean;
+  languages: string[];
+  last_air_date: string;
+  last_episode_to_air: any;
+  next_episode_to_air: any;
+  networks: any[];
+  number_of_episodes: number;
+  number_of_seasons: number;
+  origin_country: string[];
+  production_companies: any[];
+  production_countries: any[];
+  seasons: Season[];
+  spoken_languages: any[];
+  status: string;
+  tagline: string;
+  type: string;
+}
+
+export interface Season {
+  id: number;
+  air_date: string;
+  episode_count: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  vote_average: number;
+}
+
+export interface Episode {
+  id: number;
+  air_date: string;
+  episode_number: number;
+  name: string;
+  overview: string;
+  production_code: string;
+  runtime: number;
+  season_number: number;
+  show_id: number;
+  still_path: string | null;
+  vote_average: number;
+  vote_count: number;
+}
+
+export interface Person {
+  id: number;
+  name: string;
+  profile_path: string | null;
+  adult: boolean;
+  known_for_department: string;
+  known_for: (Movie | TVShow)[];
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+export interface VideosResponse {
+  id: number;
+  results: Video[];
+}
+
+export interface MovieDetails extends Movie {
+  budget: number;
+  revenue: number;
+  runtime: number;
+  status: string;
+  tagline: string;
+  genres: Genre[];
+  production_companies: any[];
+  production_countries: any[];
+  spoken_languages: any[];
+  imdb_id: string;
+}
+
+export interface TVDetails extends TVShow {
+  created_by: any[];
+  episode_run_time: number[];
+  genres: Genre[];
+  in_production: boolean;
+  languages: string[];
+  last_air_date: string;
+  networks: any[];
+  number_of_episodes: number;
+  number_of_seasons: number;
+  seasons: any[];
+  status: string;
+  type: string;
+}
+
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+export interface Cast {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+}
+
+export interface Crew {
+  id: number;
+  name: string;
+  job: string;
+  department: string;
+  profile_path: string | null;
+}
+
+// API Response types
+export interface ApiResponse<T> {
+  page: number;
+  results: T[];
+  total_pages: number;
+  total_results: number;
+}
+
+// Utility function to build API URLs
+const buildUrl = (endpoint: string, params: Record<string, any> = {}): string => {
+  const url = new URL(`${BASE_URL}${endpoint}`);
+  url.searchParams.append('api_key', API_KEY);
+  
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      url.searchParams.append(key, value.toString());
+    }
+  });
+  
+  return url.toString();
+};
+
+// Utility function to build image URLs
+export const getImageUrl = (path: string | null, type: 'poster' | 'backdrop' | 'profile', size: string = 'medium'): string => {
+  if (!path) return '/placeholder-image.jpg';
+  
+  const sizeConfig = IMAGE_SIZES[type];
+  const imageSize = sizeConfig[size as keyof typeof sizeConfig] || sizeConfig.medium;
+  
+  return `${IMAGE_BASE_URL}/${imageSize}${path}`;
+};
+
+// API functions
+export const tmdbApi = {
+  // Get popular people
+  getPopularPeople: async (page: number = 1): Promise<ApiResponse<Person>> => {
+    const response = await fetch(buildUrl(`/person/popular?page=${page}`));
+    return response.json();
+  },
+
+  // Movies
+  getPopularMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl('/movie/popular', { page }));
+    return response.json();
+  },
+
+  getTopRatedMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl('/movie/top_rated', { page }));
+    return response.json();
+  },
+
+  getNowPlayingMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl('/movie/now_playing', { page }));
+    return response.json();
+  },
+
+  getUpcomingMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl('/movie/upcoming', { page }));
+    return response.json();
+  },
+
+  getMovieDetails: async (id: number): Promise<MovieDetails> => {
+    const response = await fetch(buildUrl(`/movie/${id}`));
+    return response.json();
+  },
+
+
+  getMovieCredits: async (id: number): Promise<{ cast: Cast[]; crew: Crew[] }> => {
+    const response = await fetch(buildUrl(`/movie/${id}/credits`));
+    return response.json();
+  },
+
+  getSimilarMovies: async (id: number, page: number = 1): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl(`/movie/${id}/similar`, { page }));
+    return response.json();
+  },
+
+  // TV Shows
+  getPopularTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl('/tv/popular', { page }));
+    return response.json();
+  },
+
+  getTopRatedTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl('/tv/top_rated', { page }));
+    return response.json();
+  },
+
+  getOnTheAirTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl('/tv/on_the_air', { page }));
+    return response.json();
+  },
+
+
+
+  // Trending
+  getTrendingMovies: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl(`/trending/movie/${timeWindow}`));
+    return response.json();
+  },
+
+  getTrendingTVShows: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl(`/trending/tv/${timeWindow}`));
+    return response.json();
+  },
+
+  getTrendingAll: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<Movie | TVShow>> => {
+    const response = await fetch(buildUrl(`/trending/all/${timeWindow}`));
+    return response.json();
+  },
+
+  // Search
+  searchMulti: async (query: string, page: number = 1): Promise<ApiResponse<Movie | TVShow | Person>> => {
+    const response = await fetch(buildUrl('/search/multi', { query, page }));
+    return response.json();
+  },
+
+  searchMovies: async (query: string, page: number = 1): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl('/search/movie', { query, page }));
+    return response.json();
+  },
+
+  searchTVShows: async (query: string, page: number = 1): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl('/search/tv', { query, page }));
+    return response.json();
+  },
+
+  searchPeople: async (query: string, page: number = 1): Promise<ApiResponse<Person>> => {
+    const response = await fetch(buildUrl('/search/person', { query, page }));
+    return response.json();
+  },
+
+  // Discover
+  discoverMovies: async (params: {
+    page?: number;
+    genre?: number;
+    year?: number;
+    sort_by?: string;
+    vote_average_gte?: number;
+    vote_average_lte?: number;
+    with_runtime_gte?: number;
+    with_runtime_lte?: number;
+    with_original_language?: string;
+  } = {}): Promise<ApiResponse<Movie>> => {
+    const response = await fetch(buildUrl('/discover/movie', params));
+    return response.json();
+  },
+
+  discoverTVShows: async (params: {
+    page?: number;
+    genre?: number;
+    first_air_date_year?: number;
+    sort_by?: string;
+    vote_average_gte?: number;
+    vote_average_lte?: number;
+    with_original_language?: string;
+  } = {}): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl('/discover/tv', params));
+    return response.json();
+  },
+
+  // Genres
+  getMovieGenres: async (): Promise<{ genres: Genre[] }> => {
+    const response = await fetch(buildUrl('/genre/movie/list'));
+    return response.json();
+  },
+
+  getTVGenres: async (): Promise<{ genres: Genre[] }> => {
+    const response = await fetch(buildUrl('/genre/tv/list'));
+    return response.json();
+  },
+
+  // Person details
+  getPersonDetails: async (id: number): Promise<any> => {
+    const response = await fetch(buildUrl(`/person/${id}`));
+    return response.json();
+  },
+
+  getPersonMovieCredits: async (id: number): Promise<{ cast: Movie[]; crew: Movie[] }> => {
+    const response = await fetch(buildUrl(`/person/${id}/movie_credits`));
+    return response.json();
+  },
+
+  getPersonTVCredits: async (id: number): Promise<{ cast: TVShow[]; crew: TVShow[] }> => {
+    const response = await fetch(buildUrl(`/person/${id}/tv_credits`));
+    return response.json();
+  },
+
+  // Get movie videos (trailers)
+  getMovieVideos: async (movieId: number): Promise<VideosResponse> => {
+    const response = await fetch(buildUrl(`/movie/${movieId}/videos`));
+    return response.json();
+  },
+
+  // Get TV show videos (trailers)
+  getTVVideos: async (tvId: number): Promise<VideosResponse> => {
+    const response = await fetch(buildUrl(`/tv/${tvId}/videos`));
+    return response.json();
+  },
+
+  // TV Show Details
+  getTVShowDetails: async (id: number): Promise<TVShowDetails> => {
+    const response = await fetch(buildUrl(`/tv/${id}`));
+    return response.json();
+  },
+
+  getTVShowCredits: async (id: number): Promise<{ cast: Cast[]; crew: Crew[] }> => {
+    const response = await fetch(buildUrl(`/tv/${id}/credits`));
+    return response.json();
+  },
+
+  getSimilarTVShows: async (id: number, page: number = 1): Promise<ApiResponse<TVShow>> => {
+    const response = await fetch(buildUrl(`/tv/${id}/similar`, { page }));
+    return response.json();
+  },
+
+  // Season Details
+  getSeasonDetails: async (tvId: number, seasonNumber: number): Promise<{ episodes: Episode[] }> => {
+    const response = await fetch(buildUrl(`/tv/${tvId}/season/${seasonNumber}`));
+    return response.json();
+  }
+};
