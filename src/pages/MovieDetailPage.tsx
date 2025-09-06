@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
 
 interface MovieDetailPageProps {
+  movieId: number;
   onBack?: () => void;
+  onPlayTrailer?: (movie: any) => void;
 }
 
-const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ onBack }) => {
-  const { id } = useParams<{ id: string }>();
+const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPlayTrailer }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const movieId = parseInt(id || '0', 10);
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [cast, setCast] = useState<Cast[]>([]);
   const [crew, setCrew] = useState<Crew[]>([]);
@@ -22,7 +22,9 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ onBack }) => {
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
 
   useEffect(() => {
-    loadMovieDetails();
+    if (movieId) {
+      loadMovieDetails();
+    }
   }, [movieId]);
 
   const loadMovieDetails = async () => {

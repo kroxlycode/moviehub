@@ -47,13 +47,33 @@ const MovieDetailPageWrapper: React.FC = () => {
     }
   };
   
-  return id ? (
+  if (!id) return null;
+  
+  // Create a mock movie object with just the ID for the play trailer handler
+  const movie: Movie = {
+    id: parseInt(id),
+    title: '',
+    poster_path: '',
+    overview: '',
+    release_date: '',
+    vote_average: 0,
+    vote_count: 0,
+    backdrop_path: '',
+    genre_ids: [],
+    original_language: '',
+    original_title: '',
+    popularity: 0,
+    video: false,
+    adult: false
+  };
+  
+  return (
     <MovieDetailPage 
       movieId={parseInt(id)} 
       onBack={handleBack}
-      onPlayTrailer={handlePlayTrailer}
+      onPlayTrailer={() => handlePlayTrailer(movie)}
     />
-  ) : null;
+  );
 };
 
 const TVShowDetailPageWrapper: React.FC = () => {
@@ -77,13 +97,32 @@ const TVShowDetailPageWrapper: React.FC = () => {
     }
   };
   
-  return id ? (
+  if (!id) return null;
+  
+  // Create a mock TV show object with just the ID for the play trailer handler
+  const tvShow: TVShow = {
+    id: parseInt(id),
+    name: '',
+    poster_path: '',
+    overview: '',
+    first_air_date: '',
+    vote_average: 0,
+    vote_count: 0,
+    backdrop_path: '',
+    genre_ids: [],
+    original_language: '',
+    original_name: '',
+    popularity: 0,
+    adult: false
+  };
+  
+  return (
     <TVShowDetailPage 
       tvShowId={parseInt(id)} 
       onBack={handleBack}
-      onPlayTrailer={handlePlayTrailer}
+      onPlayTrailer={() => handlePlayTrailer(tvShow)}
     />
-  ) : null;
+  );
 };
 
 const PersonDetailPageWrapper: React.FC = () => {
