@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, X, Film, Tv, User, Home, Globe } from 'lucide-react';
+import { Menu, X, Film, Tv, User, Home } from 'lucide-react';
 import SearchDropdown from './SearchDropdown';
 import { Movie, TVShow, Person } from '../services/tmdbApi';
-import { useLanguage } from '../contexts/LanguageContext';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -13,14 +12,12 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onItemClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
-  const { language, setLanguage, t } = useLanguage();
 
   const navItems = [
-    { id: 'home', label: t('nav.home'), icon: Home },
-    { id: 'movies', label: t('nav.movies'), icon: Film },
-    { id: 'tv', label: t('nav.tvShows'), icon: Tv },
-    { id: 'people', label: t('nav.people'), icon: User },
+    { id: 'home', label: 'Ana Sayfa', icon: Home },
+    { id: 'movies', label: 'Filmler', icon: Film },
+    { id: 'tv', label: 'Diziler', icon: Tv },
+    { id: 'people', label: 'Oyuncular', icon: User },
   ];
 
   return (
@@ -68,44 +65,6 @@ const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onIt
                 </button>
               );
             })}
-            
-            {/* Language Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
-              >
-                <Globe size={18} />
-                <span className="font-medium">{language.toUpperCase()}</span>
-              </button>
-              
-              {isLanguageMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 bg-dark border border-gray-custom/20 rounded-lg shadow-xl z-50 min-w-[120px]">
-                  <button
-                    onClick={() => {
-                      setLanguage('tr');
-                      setIsLanguageMenuOpen(false);
-                    }}
-                    className={`w-full px-4 py-2 text-left hover:bg-white/10 transition-colors duration-200 rounded-t-lg ${
-                      language === 'tr' ? 'bg-accent text-white' : 'text-gray-300'
-                    }`}
-                  >
-                    🇹🇷 Türkçe
-                  </button>
-                  <button
-                    onClick={() => {
-                      setLanguage('en');
-                      setIsLanguageMenuOpen(false);
-                    }}
-                    className={`w-full px-4 py-2 text-left hover:bg-white/10 transition-colors duration-200 rounded-b-lg ${
-                      language === 'en' ? 'bg-accent text-white' : 'text-gray-300'
-                    }`}
-                  >
-                    🇺🇸 English
-                  </button>
-                </div>
-              )}
-            </div>
           </nav>
 
           {/* Mobile Menu Button */}

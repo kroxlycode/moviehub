@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users } from 'lucide-react';
-import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl, setLanguage } from '../services/tmdbApi';
-import { useLanguage } from '../contexts/LanguageContext';
+import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
 
 interface MovieDetailPageProps {
   movieId: number;
@@ -10,7 +9,6 @@ interface MovieDetailPageProps {
 }
 
 const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPlayTrailer }) => {
-  const { t, language } = useLanguage();
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [cast, setCast] = useState<Cast[]>([]);
   const [crew, setCrew] = useState<Crew[]>([]);
@@ -20,14 +18,11 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
 
   useEffect(() => {
     loadMovieDetails();
-  }, [movieId, language]);
+  }, [movieId]);
 
   const loadMovieDetails = async () => {
     try {
       setLoading(true);
-      
-      // Set language for API calls
-      setLanguage(language);
       
       const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
         tmdbApi.getMovieDetails(movieId),

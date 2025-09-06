@@ -30,14 +30,13 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
   onMovieClick,
   onTVShowClick
 }) => {
-  const { t, language } = useLanguage();
   const [actor, setActor] = useState<ActorDetails | null>(null);
   const [credits, setCredits] = useState<ActorCredits | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadActorDetails();
-  }, [actorId, language]);
+  }, [actorId]);
 
   const loadActorDetails = async () => {
     try {
@@ -55,7 +54,7 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
         crew: [...movieCreditsResponse.crew, ...tvCreditsResponse.crew]
       };
       
-      setActor(actorResponse);
+      setActor(actorResponse as ActorDetails);
       setCredits(combinedCredits);
     } catch (error) {
       console.error('Error loading actor details:', error);
@@ -66,8 +65,9 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return null;
+    
     const date = new Date(dateString);
-    return date.toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', {
+    return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'

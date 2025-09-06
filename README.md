@@ -14,7 +14,7 @@ Modern ve kullanıcı dostu çok dilli film & dizi keşif platformu. TheMovieDB 
 ### 📱 Sayfalar
 - **Filmler**: Grid layout, gelişmiş filtreleme, pagination
 - **Diziler**: Grid layout, gelişmiş filtreleme, pagination  
-- **Kişiler**: Oyuncular ve yönetmenler
+- **Aktörler**: Oyuncular ve yönetmenler
 
 ### 🎭 Detay Sayfaları
 - **Film Detayları**: Tam bilgi, oyuncular, ekip, benzer filmler, fragman
@@ -92,7 +92,7 @@ src/
 ├── pages/               # Sayfa bileşenleri
 │   ├── MoviesPage.tsx   # Filmler sayfası
 │   ├── TVShowsPage.tsx  # Diziler sayfası
-│   ├── PeoplePage.tsx   # Kişiler sayfası
+│   ├── PeoplePage.tsx   # Aktörler sayfası
 │   ├── MovieDetailPage.tsx # Film detay
 │   └── TVShowDetailPage.tsx # Dizi detay
 ├── services/            # API servisleri

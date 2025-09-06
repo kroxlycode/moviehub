@@ -118,7 +118,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
     { id: 'all', label: 'Tümü', count: totalResults },
     { id: 'movie', label: 'Filmler', count: 0 },
     { id: 'tv', label: 'Diziler', count: 0 },
-    { id: 'person', label: 'Kişiler', count: 0 }
+    { id: 'person', label: 'Aktörler', count: 0 }
   ];
 
   return (

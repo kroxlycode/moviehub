@@ -16,7 +16,7 @@ const translations = {
     'nav.home': 'Ana Sayfa',
     'nav.movies': 'Filmler',
     'nav.tvShows': 'Diziler',
-    'nav.people': 'Kişiler',
+    'nav.people': 'Aktörler',
     'search.placeholder': 'Film, dizi veya kişi ara...',
     
     // Home Page

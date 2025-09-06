@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Tv } from 'lucide-react';
-import { TVShow, tmdbApi, setLanguage } from '../services/tmdbApi';
+import { TVShow, tmdbApi } from '../services/tmdbApi';
 import FilterBar from '../components/FilterBar';
 import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
 import LayoutToggle from '../components/LayoutToggle';
-import { useLanguage } from '../contexts/LanguageContext';
 
 interface FilterOptions {
   genre?: number;
@@ -21,7 +20,6 @@ interface TVShowsPageProps {
 }
 
 const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer }) => {
-  const { t, language } = useLanguage();
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,14 +29,11 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
 
   useEffect(() => {
     loadTVShows();
-  }, [currentPage, filters, language]);
+  }, [currentPage, filters, layout]);
 
   const loadTVShows = async () => {
     try {
       setLoading(true);
-      
-      // Set language for API calls
-      setLanguage(language);
       
       const params = {
         page: currentPage,

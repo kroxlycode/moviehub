@@ -13,12 +13,10 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
 import ActorDetailPage from './pages/ActorDetailPage';
 import TrailerModal from './components/TrailerModal';
-import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
-import { Movie, TVShow, Person, tmdbApi, setLanguage } from './services/tmdbApi';
+import { Movie, TVShow, Person, tmdbApi } from './services/tmdbApi';
 
 const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('home');
-  const { language, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   
   // Data states
@@ -41,10 +39,6 @@ const AppContent: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Movie | TVShow | Person | null>(null);
   const [selectedItemType, setSelectedItemType] = useState<'movie' | 'tv' | 'person' | null>(null);
 
-  // Language effect
-  useEffect(() => {
-    setLanguage(language);
-  }, [language]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -82,7 +76,7 @@ const AppContent: React.FC = () => {
     };
 
     fetchData();
-  }, [language]); // Re-fetch when language changes
+  }, []); // Fetch data on mount
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -149,7 +143,7 @@ const AppContent: React.FC = () => {
             
             <div className="space-y-8">
               <HorizontalScroll
-                title={t('home.popularMovies')}
+                title="Popüler Filmler"
                 items={popularMovies}
                 onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
@@ -157,7 +151,7 @@ const AppContent: React.FC = () => {
               />
               
               <HorizontalScroll
-                title={t('home.popularTVShows')}
+                title="Popüler Diziler"
                 items={popularTVShows}
                 onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
@@ -165,7 +159,7 @@ const AppContent: React.FC = () => {
               />
               
               <HorizontalScroll
-                title={t('home.topRatedMovies')}
+                title="En Çok Beğenilen Filmler"
                 items={topRatedMovies}
                 onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
@@ -173,7 +167,7 @@ const AppContent: React.FC = () => {
               />
               
               <HorizontalScroll
-                title={t('home.nowPlayingMovies')}
+                title="Vizyondaki Filmler"
                 items={nowPlayingMovies}
                 onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
@@ -181,7 +175,7 @@ const AppContent: React.FC = () => {
               />
               
               <HorizontalScroll
-                title={t('home.upcomingMovies')}
+                title="Yakında Gelecek Filmler"
                 items={upcomingMovies}
                 onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
@@ -276,11 +270,7 @@ const AppContent: React.FC = () => {
 };
 
 function App() {
-  return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
-  );
+  return <AppContent />;
 }
 
 export default App;

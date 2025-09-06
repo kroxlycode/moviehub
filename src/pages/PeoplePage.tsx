@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Search } from 'lucide-react';
-import { Person, tmdbApi } from '../services/tmdbApi';
+import { Person, Movie, TVShow, tmdbApi } from '../services/tmdbApi';
+import FilterBar from '../components/FilterBar';
 import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
 import LayoutToggle from '../components/LayoutToggle';
@@ -26,74 +27,85 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
     }
   }, [currentPage, searchQuery]);
 
+  useEffect(() => {
+    loadPopularActors();
+  }, []);
+
   const loadPopularActors = async () => {
     try {
       setLoading(true);
       setIsSearching(false);
       
-      // Load actors from popular movies and TV shows
-      const [moviesResponse, tvResponse] = await Promise.all([
-        tmdbApi.getPopularMovies(),
-        tmdbApi.getPopularTVShows()
-      ]);
-      
-      const actorsFromContent: Person[] = [];
-      const processedActorIds = new Set<number>();
-      
-      // Get actors from popular movies
-      for (const movie of moviesResponse.results.slice(0, 10)) {
-        try {
-          const credits = await tmdbApi.getMovieCredits(movie.id);
-          credits.cast.slice(0, 6).forEach((actor: any) => {
-            if (!processedActorIds.has(actor.id)) {
-              processedActorIds.add(actor.id);
-              actorsFromContent.push({
-                id: actor.id,
-                name: actor.name,
-                profile_path: actor.profile_path,
-                adult: false,
-                known_for_department: 'Acting',
-                known_for: [movie]
-              });
-            }
-          });
-        } catch (error) {
-          console.error('Error loading movie credits:', error);
+      if (searchQuery.trim()) {
+        // Load actors from popular movies and TV shows
+        const [moviesResponse, tvResponse] = await Promise.all([
+          tmdbApi.getPopularMovies(),
+          tmdbApi.getPopularTVShows()
+        ]);
+        
+        const actorsFromContent: Person[] = [];
+        const processedActorIds = new Set<number>();
+        
+        // Get actors from popular movies
+        for (const movie of moviesResponse.results.slice(0, 10)) {
+          try {
+            const credits = await tmdbApi.getMovieCredits(movie.id);
+            credits.cast.slice(0, 6).forEach((actor: any) => {
+              if (!processedActorIds.has(actor.id)) {
+                processedActorIds.add(actor.id);
+                actorsFromContent.push({
+                  id: actor.id,
+                  name: actor.name,
+                  profile_path: actor.profile_path,
+                  adult: false,
+                  known_for_department: 'Acting',
+                  known_for: [movie]
+                });
+              }
+            });
+          } catch (error) {
+            console.error('Error loading movie credits:', error);
+          }
         }
-      }
-      
-      // Get actors from popular TV shows
-      for (const tvShow of tvResponse.results.slice(0, 10)) {
-        try {
-          const credits = await tmdbApi.getTVShowCredits(tvShow.id);
-          credits.cast.slice(0, 6).forEach((actor: any) => {
-            if (!processedActorIds.has(actor.id)) {
-              processedActorIds.add(actor.id);
-              actorsFromContent.push({
-                id: actor.id,
-                name: actor.name,
-                profile_path: actor.profile_path,
-                adult: false,
-                known_for_department: 'Acting',
-                known_for: [tvShow]
-              });
-            }
-          });
-        } catch (error) {
-          console.error('Error loading TV credits:', error);
+        
+        // Get actors from popular TV shows
+        for (const tvShow of tvResponse.results.slice(0, 10)) {
+          try {
+            const credits = await tmdbApi.getTVShowCredits(tvShow.id);
+            credits.cast.slice(0, 6).forEach((actor: any) => {
+              if (!processedActorIds.has(actor.id)) {
+                processedActorIds.add(actor.id);
+                actorsFromContent.push({
+                  id: actor.id,
+                  name: actor.name,
+                  profile_path: actor.profile_path,
+                  adult: false,
+                  known_for_department: 'Acting',
+                  known_for: [tvShow]
+                });
+              }
+            });
+          } catch (error) {
+            console.error('Error loading TV credits:', error);
+          }
         }
+        
+        // Sort by popularity and paginate
+        const sortedActors = actorsFromContent
+          .sort((a, b) => (b.known_for?.length || 0) - (a.known_for?.length || 0));
+        
+        const startIndex = (currentPage - 1) * 20;
+        const endIndex = currentPage * 20;
+        const paginatedActors = sortedActors.slice(startIndex, endIndex);
+        
+        setActors(paginatedActors);
+        setTotalPages(Math.ceil(sortedActors.length / 20));
+      } else {
+        // Load popular actors
+        const response = await tmdbApi.getPopularPeople(currentPage);
+        setActors(response.results);
+        setTotalPages(response.total_pages);
       }
-      
-      // Sort by popularity and paginate
-      const sortedActors = actorsFromContent
-        .sort((a, b) => (b.known_for?.length || 0) - (a.known_for?.length || 0));
-      
-      const startIndex = (currentPage - 1) * 20;
-      const endIndex = currentPage * 20;
-      const paginatedActors = sortedActors.slice(startIndex, endIndex);
-      
-      setActors(paginatedActors);
-      setTotalPages(Math.ceil(sortedActors.length / 20));
     } catch (error) {
       console.error('Error loading actors:', error);
       setActors([]);
@@ -155,9 +167,9 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
           <Users className="w-8 h-8 text-dark" />
         </div>
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white">Aktörler</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white">Oyuncular</h1>
           <p className="text-gray-400 mt-1">
-            Favori oyuncularınızı keşfedin ve filmografilerini inceleyin
+            Ünlü oyuncuları keşfedin ve filmografilerini inceleyin
           </p>
         </div>
       </div>
@@ -170,7 +182,7 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
               type="text"
               value={searchQuery}
               onChange={handleSearchInputChange}
-              placeholder="Aktör ara..."
+              placeholder="Oyuncu ara..."
               className="w-full px-4 py-3 pl-12 pr-4 bg-dark-lighter/80 backdrop-blur-sm border border-gray-custom/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
             />
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -189,12 +201,7 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
       {!loading && actors.length > 0 && (
         <div className="mb-6">
           <p className="text-gray-400 text-sm">
-            {isSearching ? (
-              <>\"{searchQuery}\" için sonuçlar - </>
-            ) : (
-              'Popüler aktörler - '
-            )}
-            Sayfa {currentPage} / {totalPages}
+            {searchQuery ? `"${searchQuery}" için sonuçlar` : `Sayfa ${currentPage} / ${totalPages}`}
           </p>
         </div>
       )}
