@@ -53,7 +53,7 @@ export default function HomePage({ onPlayTrailer }: HomePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen text-white">
       <main>
         <HeroBanner 
           items={trendingItems} 
