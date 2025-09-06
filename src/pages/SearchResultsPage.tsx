@@ -207,6 +207,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
               }}
               onPlayTrailer={onPlayTrailer}
               loading={false}
+              type={activeTab === 'person' ? 'person' : 'movie'}
             />
 
             {/* Pagination */}
