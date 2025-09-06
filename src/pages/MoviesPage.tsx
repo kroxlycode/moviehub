@@ -4,6 +4,7 @@ import { Movie, tmdbApi } from '../services/tmdbApi';
 import FilterBar from '../components/FilterBar';
 import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
+import LayoutToggle from '../components/LayoutToggle';
 
 interface FilterOptions {
   genre?: number;
@@ -26,6 +27,7 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState<FilterOptions>({ sortBy: 'popularity.desc' });
+  const [layout, setLayout] = useState<'grid' | 'horizontal'>('grid');
 
   useEffect(() => {
     loadMovies();
@@ -82,12 +84,15 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <FilterBar
-        type="movie"
-        onFilterChange={handleFilterChange}
-        loading={loading}
-      />
+      {/* Filter Bar and Layout Toggle */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <FilterBar
+          type="movie"
+          onFilterChange={handleFilterChange}
+          loading={loading}
+        />
+        <LayoutToggle layout={layout} onLayoutChange={setLayout} />
+      </div>
 
       {/* Results Info */}
       {!loading && movies.length > 0 && (
@@ -105,6 +110,7 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         onPlayTrailer={(item) => onPlayTrailer(item as Movie)}
         loading={loading}
         type="movie"
+        layout={layout}
       />
 
       {/* Pagination */}

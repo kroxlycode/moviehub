@@ -14,7 +14,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
   const releaseDate = 'release_date' in item ? item.release_date : item.first_air_date;
   const posterUrl = getImageUrl(item.poster_path, 'poster', size === 'large' ? 'large' : 'medium');
 
-  const cardWidth = size === 'large' ? 'w-56' : size === 'medium' ? 'w-48' : 'w-40';
+  const cardWidth = size === 'large' ? 'w-48 sm:w-56 md:w-64' : size === 'medium' ? 'w-40 sm:w-44 md:w-48 lg:w-52' : 'w-32 sm:w-36 md:w-40';
   const aspectRatio = 'aspect-[2/3]'; // Standard movie poster ratio
 
   return (

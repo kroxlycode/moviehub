@@ -4,6 +4,7 @@ import { TVShow, tmdbApi } from '../services/tmdbApi';
 import FilterBar from '../components/FilterBar';
 import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
+import LayoutToggle from '../components/LayoutToggle';
 
 interface FilterOptions {
   genre?: number;
@@ -24,6 +25,7 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState<FilterOptions>({ sortBy: 'popularity.desc' });
+  const [layout, setLayout] = useState<'grid' | 'horizontal'>('grid');
 
   useEffect(() => {
     loadTVShows();
@@ -78,12 +80,15 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <FilterBar
-        type="tv"
-        onFilterChange={handleFilterChange}
-        loading={loading}
-      />
+      {/* Filter Bar and Layout Toggle */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <FilterBar
+          type="tv"
+          onFilterChange={handleFilterChange}
+          loading={loading}
+        />
+        <LayoutToggle layout={layout} onLayoutChange={setLayout} />
+      </div>
 
       {/* Results Info */}
       {!loading && tvShows.length > 0 && (
@@ -101,6 +106,7 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         onPlayTrailer={(item) => onPlayTrailer(item as TVShow)}
         loading={loading}
         type="tv"
+        layout={layout}
       />
 
       {/* Pagination */}
