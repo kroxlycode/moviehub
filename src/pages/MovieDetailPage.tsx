@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users } from 'lucide-react';
+import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users, Film } from 'lucide-react';
+import { toast } from 'react-toastify';
 import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
 
 interface MovieDetailPageProps {
@@ -15,6 +16,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'cast' | 'crew' | 'similar'>('overview');
+  const [trailerKey, setTrailerKey] = useState<string | null>(null);
 
   useEffect(() => {
     loadMovieDetails();
@@ -24,11 +26,20 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     try {
       setLoading(true);
 
-      const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
+      const [movieResponse, creditsResponse, similarResponse, videosResponse] = await Promise.all([
         tmdbApi.getMovieDetails(movieId),
         tmdbApi.getMovieCredits(movieId),
-        tmdbApi.getSimilarMovies(movieId)
+        tmdbApi.getSimilarMovies(movieId),
+        tmdbApi.getMovieVideos(movieId)
       ]);
+
+      // Find trailer
+      const trailer = videosResponse.results.find(
+        (video: any) => video.type === 'Trailer' && video.site === 'YouTube'
+      );
+      if (trailer) {
+        setTrailerKey(trailer.key);
+      }
 
       setMovie(movieResponse);
       setCast(creditsResponse.cast.slice(0, 20));
@@ -36,8 +47,37 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
       setSimilarMovies(similarResponse.results.slice(0, 12));
     } catch (error) {
       console.error('Error loading movie details:', error);
+      toast.error('Film detayları yüklenirken bir hata oluştu');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePlayTrailer = () => {
+    if (trailerKey) {
+      window.open(`https://www.youtube.com/watch?v=${trailerKey}`, '_blank');
+    } else {
+      toast.info('Bu film için fragman bulunamadı');
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: movie?.title || 'Film',
+      text: movie?.overview || '',
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Paylaşım hatası:', err);
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success('Bağlantı panoya kopyalandı!');
     }
   };
 
@@ -153,7 +193,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                   {movie.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm"
+                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm text-white font-semibold"
                     >
                       {genre.name}
                     </span>
@@ -163,24 +203,18 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 mb-8">
                   <button
-                    onClick={() => onPlayTrailer(movie as Movie)}
+                    onClick={handlePlayTrailer}
                     className="flex items-center space-x-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    disabled={!trailerKey}
                   >
                     <Play className="w-5 h-5" />
                     <span>Fragman İzle</span>
                   </button>
 
-                  <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                    <Heart className="w-5 h-5" />
-                    <span>Favorilere Ekle</span>
-                  </button>
-
-                  <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                    <Bookmark className="w-5 h-5" />
-                    <span>İzleme Listesi</span>
-                  </button>
-
-                  <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                  >
                     <Share2 className="w-5 h-5" />
                     <span>Paylaş</span>
                   </button>

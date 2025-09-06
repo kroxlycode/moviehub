@@ -210,7 +210,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   {tvShow.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm"
+                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm text-white font-semibold"
                     >
                       {genre.name}
                     </span>
@@ -225,16 +225,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   >
                     <Play className="w-5 h-5" />
                     <span>Fragman İzle</span>
-                  </button>
-                  
-                  <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                    <Heart className="w-5 h-5" />
-                    <span>Favorilere Ekle</span>
-                  </button>
-                  
-                  <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                    <Bookmark className="w-5 h-5" />
-                    <span>İzleme Listesi</span>
                   </button>
                   
                   <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
