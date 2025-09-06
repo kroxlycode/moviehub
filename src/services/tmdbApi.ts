@@ -291,7 +291,7 @@ export const tmdbApi = {
 
   // Movies
   getPopularMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/movie/popular', { page, language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl('/movie/popular', { page }));
     return response.json();
   },
 
@@ -303,6 +303,24 @@ export const tmdbApi = {
   getNowPlayingMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
     const response = await fetch(buildUrl('/movie/now_playing', { page, language: currentApiLanguage }));
     return response.json();
+  },
+
+  // Get movie genres
+  getMovieGenres: async (): Promise<{ genres: Genre[] }> => {
+    try {
+      const response = await fetchWithRetry(buildUrl('/genre/movie/list', {
+        language: currentApiLanguage
+      }));
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch movie genres: ${response.status}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error('Error in getMovieGenres:', error);
+      throw error;
+    }
   },
 
   getUpcomingMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
@@ -328,7 +346,7 @@ export const tmdbApi = {
 
   // TV Shows
   getPopularTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/tv/popular', { page, language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl('/tv/popular', { page }));
     return response.json();
   },
 
@@ -340,6 +358,24 @@ export const tmdbApi = {
   getOnTheAirTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
     const response = await fetch(buildUrl('/tv/on_the_air', { page, language: currentApiLanguage }));
     return response.json();
+  },
+
+  // Get TV show genres
+  getTVGenres: async (): Promise<{ genres: Genre[] }> => {
+    try {
+      const response = await fetchWithRetry(buildUrl('/genre/tv/list', {
+        language: currentApiLanguage
+      }));
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch TV show genres: ${response.status}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error('Error in getTVGenres:', error);
+      throw error;
+    }
   },
 
 
@@ -409,7 +445,6 @@ export const tmdbApi = {
     const response = await fetchWithRetry(buildUrl('/discover/tv', params));
     return response.json();
   },
-
 
   // Person details
   getPersonDetails: async (id: number): Promise<Person> => {
