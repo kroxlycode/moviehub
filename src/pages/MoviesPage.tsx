@@ -103,7 +103,6 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         </div>
       )}
 
-      {/* Movies Grid */}
       <GridLayout
         items={movies}
         onItemClick={(item) => onMovieClick(item as Movie)}
