@@ -155,10 +155,10 @@ npm run eject      # CRA yapılandırmasını çıkar (dikkatli kullanın)
 - **Code Splitting**: Sayfa bazlı kod bölünmesi *(yakında)*
 - **Caching**: API yanıtları için akıllı önbellekleme *(yakında)*
 
-## 🌟 Screenshots
+## 🌟 Ekran Görüntüleri
 
 ### Ana Sayfa
-![Ana Sayfa](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Ana+Sayfa+-+Hero+Banner+%26+Lists)
+![Ana Sayfa](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Ana+Sayfa+-+Hero+Banner+%26+Listss)
 
 ### Film Detay
 ![Film Detay](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Film+Detay+-+Tabs+%26+Info)

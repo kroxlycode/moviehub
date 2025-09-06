@@ -129,7 +129,7 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
           <Film className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-white mb-2">Film bulunamadı</h3>
           <p className="text-gray-400">
-            Farklı filtreler deneyebilir veya arama terimini değiştirebilirsiniz.
+            Farklı filtreler deneyebilir veya başka bir arama terimini girin.
           </p>
         </div>
       )}
