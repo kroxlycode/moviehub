@@ -161,9 +161,35 @@ const App: React.FC = () => {
     }
   };
   
+  const [currentPage, setCurrentPage] = useState('home');
+  
+  const handleNavigate = (page: string) => {
+    setCurrentPage(page);
+    if (page === 'home') {
+      navigate('/');
+    } else {
+      navigate(`/${page}`);
+    }
+  };
+  
+  const handleItemClick = (item: Movie | TVShow | Person, type: 'movie' | 'tv' | 'person') => {
+    if (type === 'movie') {
+      handleMovieClick(item as Movie);
+    } else if (type === 'tv') {
+      handleTVShowClick(item as TVShow);
+    } else if (type === 'person') {
+      handlePersonClick(item as Person);
+    }
+  };
+
   return (
     <Layout>
-      <Header onSearch={handleSearch} />
+      <Header 
+        onSearch={handleSearch} 
+        currentPage={currentPage}
+        onNavigate={handleNavigate}
+        onItemClick={handleItemClick}
+      />
       <Routes>
         <Route 
           path="/" 
