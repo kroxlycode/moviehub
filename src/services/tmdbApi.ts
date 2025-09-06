@@ -210,6 +210,36 @@ export interface ApiResponse<T> {
   total_results: number;
 }
 
+// Enhanced fetch with retry logic
+const fetchWithRetry = async (url: string, options: RequestInit = {}, retries = 3, delay = 1000): Promise<Response> => {
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      mode: 'cors',
+      cache: 'default'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return response;
+  } catch (error) {
+    if (retries <= 0) {
+      console.error('Max retries reached. Last error:', error);
+      throw error;
+    }
+    
+    console.warn(`Retrying... (${retries} attempts left)`);
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return fetchWithRetry(url, options, retries - 1, delay * 2);
+  }
+};
+
 // Utility function to build API URLs
 const buildUrl = (endpoint: string, params: Record<string, any> = {}): string => {
   try {
@@ -310,46 +340,46 @@ export const tmdbApi = {
   getOnTheAirTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
     const response = await fetch(buildUrl('/tv/on_the_air', { page, language: currentApiLanguage }));
     return response.json();
- },
-
+  },
 
 
   // Trending
-  getTrending: async (mediaType: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<Movie | TVShow>> => {
-    const response = await fetch(buildUrl(`/trending/${mediaType}/${timeWindow}`, { language: currentApiLanguage }));
+  getTrending: async (timeWindow: 'day' | 'week' = 'week', mediaType: 'all' | 'movie' | 'tv' | 'person' = 'all'): Promise<ApiResponse<Movie | TVShow | Person>> => {
+    const response = await fetchWithRetry(buildUrl(`/trending/${mediaType}/${timeWindow}`));
     return response.json();
   },
 
   getTrendingTVShows: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl(`/trending/tv/${timeWindow}`, { language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl(`/trending/tv/${timeWindow}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getTrendingAll: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<Movie | TVShow>> => {
-    const response = await fetch(buildUrl(`/trending/all/${timeWindow}`, { language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl(`/trending/all/${timeWindow}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   // Search
   searchMulti: async (query: string, page: number = 1): Promise<ApiResponse<Movie | TVShow | Person>> => {
-    const response = await fetch(buildUrl('/search/multi', { query, page, language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl('/search/multi', { query, page }));
     return response.json();
   },
 
   searchMovies: async (query: string, page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/search/movie', { query, page, language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl('/search/movie', { query, page }));
     return response.json();
   },
 
   searchTVShows: async (query: string, page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/search/tv', { query, page, language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl('/search/tv', { query, page }));
     return response.json();
   },
 
   searchPeople: async (query: string, page: number = 1): Promise<ApiResponse<Person>> => {
-    const response = await fetch(buildUrl('/search/person', { query, page, language: currentApiLanguage }));
+    const response = await fetchWithRetry(buildUrl('/search/person', { query, page }));
     return response.json();
   },
+
 
   // Discover
   discoverMovies: async (params: {
@@ -363,7 +393,7 @@ export const tmdbApi = {
     with_runtime_lte?: number;
     with_original_language?: string;
   } = {}): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/discover/movie', params));
+    const response = await fetchWithRetry(buildUrl('/discover/movie', params));
     return response.json();
   },
 
@@ -376,28 +406,22 @@ export const tmdbApi = {
     vote_average_lte?: number;
     with_original_language?: string;
   } = {}): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/discover/tv', params));
+    const response = await fetchWithRetry(buildUrl('/discover/tv', params));
     return response.json();
   },
 
-  // Genres
-  getMovieGenres: async (): Promise<{ genres: Genre[] }> => {
-    const response = await fetch(buildUrl('/genre/movie/list'));
-    return response.json();
-  },
-
-  getTVGenres: async (): Promise<{ genres: Genre[] }> => {
-    const response = await fetch(buildUrl('/genre/tv/list'));
-    return response.json();
-  },
 
   // Person details
   getPersonDetails: async (id: number): Promise<Person> => {
     try {
-      const response = await fetch(buildUrl(`/person/${id}`, { append_to_response: 'images,combined_credits' }));
+      const response = await fetchWithRetry(buildUrl(`/person/${id}`, { 
+        append_to_response: 'images,combined_credits' 
+      }));
+      
       if (!response.ok) {
         throw new Error(`Failed to fetch person details: ${response.status}`);
       }
+      
       return response.json();
     } catch (error) {
       console.error('Error in getPersonDetails:', error);
@@ -407,7 +431,7 @@ export const tmdbApi = {
 
   getPersonMovieCredits: async (id: number): Promise<{ cast: Movie[]; crew: Movie[] }> => {
     try {
-      const response = await fetch(buildUrl(`/person/${id}/movie_credits`));
+      const response = await fetchWithRetry(buildUrl(`/person/${id}/movie_credits`));
       if (!response.ok) {
         throw new Error(`Failed to fetch person movie credits: ${response.status}`);
       }
@@ -420,7 +444,7 @@ export const tmdbApi = {
 
   getPersonTVCredits: async (id: number): Promise<{ cast: TVShow[]; crew: TVShow[] }> => {
     try {
-      const response = await fetch(buildUrl(`/person/${id}/tv_credits`));
+      const response = await fetchWithRetry(buildUrl(`/person/${id}/tv_credits`));
       if (!response.ok) {
         throw new Error(`Failed to fetch person TV credits: ${response.status}`);
       }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import useSeo from '../hooks/useSeo';
 import { tmdbApi } from '../services/tmdbApi';
 import type { Person, Movie, TVShow } from '../services/tmdbApi';
 
@@ -24,6 +25,14 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Set SEO metadata
+  useSeo({
+    title: person ? person.name : 'Oyuncu Profili',
+    description: person ? `${person.name} hakkında detaylı bilgiler, oynadığı filmler ve diziler. ${person.biography ? person.biography.substring(0, 150) + '...' : ''}` : 'Oyuncu profili sayfası',
+    type: 'profile',
+    image: person ? `https://image.tmdb.org/t/p/w500${person.profile_path}` : undefined
+  });
   
   useEffect(() => {
     const fetchPersonDetails = async () => {

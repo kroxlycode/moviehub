@@ -20,12 +20,16 @@ export default function HomePage({ onPlayTrailer }: HomePageProps) {
     const fetchData = async () => {
       try {
         const [trendingResponse, moviesResponse, tvResponse] = await Promise.all([
-          tmdbApi.getTrending('all'),
+          tmdbApi.getTrending('week', 'all'),
           tmdbApi.getPopularMovies(),
           tmdbApi.getPopularTVShows()
         ]);
         
-        setTrendingItems(trendingResponse.results);
+        // Filter out Person types from trending items
+        const filteredTrending = trendingResponse.results.filter(
+          (item): item is Movie | TVShow => 'title' in item || 'name' in item
+        );
+        setTrendingItems(filteredTrending);
         setPopularMovies(moviesResponse.results);
         setPopularTVShows(tvResponse.results);
       } catch (error) {

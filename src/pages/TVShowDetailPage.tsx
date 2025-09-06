@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import useSeo from '../hooks/useSeo';
 import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { TVShow, TVShowDetails, Cast, Crew, Season, Episode, tmdbApi, getImageUrl } from '../services/tmdbApi';
 import { FadeIn, SlideInLeft, SlideInRight, CardHover, StaggerContainer, StaggerItem } from '../components/AnimatedComponents';
@@ -23,6 +25,14 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
   const [loadingEpisodes, setLoadingEpisodes] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'seasons' | 'cast' | 'crew' | 'similar' | 'media' | 'watch'>('overview');
   const [expandedSeasons, setExpandedSeasons] = useState<Set<number>>(new Set());
+
+  // Set SEO metadata
+  useSeo({
+    title: tvShow ? `${tvShow.name} (${tvShow.first_air_date ? new Date(tvShow.first_air_date).getFullYear() : ''}${tvShow.last_air_date && tvShow.first_air_date !== tvShow.last_air_date ? `-${new Date(tvShow.last_air_date).getFullYear()}` : ''})` : 'Dizi Detayı',
+    description: tvShow ? `${tvShow.name} dizisi hakkında detaylı bilgiler, oyuncu kadrosu, sezonlar, bölümler ve daha fazlası. ${tvShow.tagline || ''}` : 'Dizi detay sayfası',
+    type: 'video.tv_show',
+    image: tvShow ? getImageUrl(tvShow.poster_path, 'poster', 'original') : undefined
+  });
 
   useEffect(() => {
     loadTVShowDetails();
@@ -431,21 +441,25 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
           {activeTab === 'cast' && (
             <FadeIn>
               <h2 className="text-2xl font-bold text-white mb-6">Oyuncular</h2>
-              <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {cast.map((person) => (
-                  <StaggerItem key={person.id}>
-                    <CardHover className="text-center">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {cast.slice(0, 12).map((person) => (
+                  <Link 
+                    key={person.id} 
+                    to={`/oyuncu/${person.id}`}
+                    className="text-center hover:opacity-80 transition-opacity"
+                  >
+                    <div className="relative overflow-hidden rounded-lg aspect-[2/3] mb-2">
                       <LazyImage
                         src={getImageUrl(person.profile_path, 'profile', 'medium')}
                         alt={person.name}
-                        className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
-                      <h4 className="text-white font-semibold text-sm">{person.name}</h4>
-                      <p className="text-gray-400 text-xs">{person.character}</p>
-                    </CardHover>
-                  </StaggerItem>
+                    </div>
+                    <h4 className="text-white font-semibold text-sm">{person.name}</h4>
+                    <p className="text-gray-400 text-xs">{person.character}</p>
+                  </Link>
                 ))}
-              </StaggerContainer>
+              </div>
             </FadeIn>
           )}
 
@@ -491,24 +505,33 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
           {activeTab === 'similar' && (
             <FadeIn>
               <h2 className="text-2xl font-bold text-white mb-6">Benzer Diziler</h2>
-              <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {similarTVShows.map((similarShow) => (
-                  <StaggerItem key={similarShow.id}>
-                    <CardHover className="cursor-pointer">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {similarTVShows.map((show) => (
+                  <Link 
+                    key={show.id} 
+                    to={`/dizi/${show.id}/${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`}
+                    className="group block"
+                  >
+                    <div className="relative overflow-hidden rounded-lg aspect-[2/3] mb-2">
                       <LazyImage
-                        src={getImageUrl(similarShow.poster_path, 'poster', 'medium')}
-                        alt={similarShow.name}
-                        className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
+                        src={getImageUrl(show.poster_path, 'poster', 'medium')}
+                        alt={show.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <h4 className="text-white font-semibold text-sm line-clamp-2">{similarShow.name}</h4>
-                      <div className="flex items-center space-x-1 mt-1">
-                        <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                        <span className="text-gray-400 text-xs">{similarShow.vote_average.toFixed(1)}</span>
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Play className="w-8 h-8 text-white" />
                       </div>
-                    </CardHover>
-                  </StaggerItem>
+                    </div>
+                    <h4 className="text-white font-semibold text-sm line-clamp-2 group-hover:text-secondary transition-colors">
+                      {show.name}
+                    </h4>
+                    <div className="flex items-center mt-1">
+                      <Star className="w-3 h-3 text-yellow-500 fill-current mr-1" />
+                      <span className="text-xs text-gray-400">{show.vote_average?.toFixed(1)}</span>
+                    </div>
+                  </Link>
                 ))}
-              </StaggerContainer>
+              </div>
             </FadeIn>
           )}
         </div>

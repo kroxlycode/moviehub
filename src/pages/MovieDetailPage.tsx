@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import useSeo from '../hooks/useSeo';
 import { ArrowLeft, Play, Share2, Star, Calendar, Clock, Globe, Users, Film } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
@@ -20,6 +21,14 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'cast' | 'crew' | 'similar'>('overview');
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
+
+  // Set SEO metadata
+  useSeo({
+    title: movie ? `${movie.title} (${new Date(movie.release_date).getFullYear()})` : 'Film Detayı',
+    description: movie ? `${movie.title} filmi hakkında detaylı bilgiler, oyuncu kadrosu, yönetmen ve daha fazlası. ${movie.tagline || ''}` : 'Film detay sayfası',
+    type: 'video.movie',
+    image: movie ? getImageUrl(movie.poster_path, 'poster', 'original') : undefined
+  });
 
   useEffect(() => {
     if (movieId) {
@@ -324,7 +333,11 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
               <h2 className="text-2xl font-bold text-white mb-6">Oyuncular</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {cast.map((person) => (
-                  <div key={person.id} className="text-center">
+                  <Link 
+                    key={person.id} 
+                    to={`/oyuncu/${person.id}`}
+                    className="text-center hover:opacity-80 transition-opacity"
+                  >
                     <img
                       src={getImageUrl(person.profile_path, 'profile', 'medium')}
                       alt={person.name}
@@ -332,7 +345,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                     />
                     <h4 className="text-white font-semibold text-sm">{person.name}</h4>
                     <p className="text-gray-400 text-xs">{person.character}</p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -364,18 +377,26 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
               <h2 className="text-2xl font-bold text-white mb-6">Benzer Filmler</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {similarMovies.map((similarMovie) => (
-                  <div key={similarMovie.id} className="cursor-pointer group">
-                    <img
-                      src={getImageUrl(similarMovie.poster_path, 'poster', 'medium')}
-                      alt={similarMovie.title}
-                      className="w-full aspect-[2/3] object-cover rounded-lg mb-2 group-hover:scale-105 transition-transform"
-                    />
-                    <h4 className="text-white font-semibold text-sm line-clamp-2">{similarMovie.title}</h4>
+                  <Link 
+                    key={similarMovie.id} 
+                    to={`/film/${similarMovie.id}/${similarMovie.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`}
+                    className="group block"
+                  >
+                    <div className="overflow-hidden rounded-lg mb-2">
+                      <img
+                        src={getImageUrl(similarMovie.poster_path, 'poster', 'medium')}
+                        alt={similarMovie.title}
+                        className="w-full aspect-[2/3] object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <h4 className="text-white font-semibold text-sm line-clamp-2 group-hover:text-secondary transition-colors">
+                      {similarMovie.title}
+                    </h4>
                     <div className="flex items-center space-x-1 mt-1">
                       <Star className="w-3 h-3 text-yellow-500 fill-current" />
                       <span className="text-gray-400 text-xs">{similarMovie.vote_average.toFixed(1)}</span>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
