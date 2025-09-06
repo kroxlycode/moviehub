@@ -131,12 +131,17 @@ const PersonDetailPageWrapper: React.FC = () => {
   
   const handleBack = () => navigate(-1);
   
-  return id ? (
+  if (!id) {
+    navigate('/oyuncular');
+    return null;
+  }
+  
+  return (
     <PersonDetailPage 
-      personId={parseInt(id)}
+      personId={parseInt(id, 10)}
       onBack={handleBack}
     />
-  ) : null;
+  );
 };
 
 const App: React.FC = () => {
@@ -152,7 +157,7 @@ const App: React.FC = () => {
   };
   
   const handlePersonClick = (person: Person) => {
-    navigate(`/oyuncu/${person.id}/${person.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`);
+    navigate(`/oyuncu/${person.id}`);
   };
   
   const handleSearch = (query: string) => {
@@ -245,7 +250,7 @@ const App: React.FC = () => {
         />
         <Route path="/film/:id/:title?" element={<MovieDetailPageWrapper />} />
         <Route path="/dizi/:id/:title?" element={<TVShowDetailPageWrapper />} />
-        <Route path="/oyuncu/:id/:name?" element={<PersonDetailPageWrapper />} />
+        <Route path="/oyuncu/:id" element={<PersonDetailPageWrapper />} />
         <Route 
           path="/ara/:query" 
           element={
