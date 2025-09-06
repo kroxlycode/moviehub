@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X, Film, Tv, User, Home } from 'lucide-react';
 import SearchDropdown from './SearchDropdown';
+import ContentLanguageSelector from './ContentLanguageSelector';
 import { Movie, TVShow, Person } from '../services/tmdbApi';
 
 interface HeaderProps {
@@ -65,6 +66,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onIt
                 </button>
               );
             })}
+            
+            {/* Content Language Selector */}
+            <ContentLanguageSelector />
           </nav>
 
           {/* Mobile Menu Button */}
@@ -108,6 +112,12 @@ const Header: React.FC<HeaderProps> = ({ onSearch, currentPage, onNavigate, onIt
                   </button>
                 );
               })}
+              
+              {/* Mobile Content Language Selector */}
+              <div className="px-4 py-2">
+                <div className="text-xs text-gray-400 mb-2">İçerik Dili</div>
+                <ContentLanguageSelector />
+              </div>
             </nav>
           </div>
         )}

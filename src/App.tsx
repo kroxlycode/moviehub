@@ -13,9 +13,11 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
 import ActorDetailPage from './pages/ActorDetailPage';
 import TrailerModal from './components/TrailerModal';
-import { Movie, TVShow, Person, tmdbApi } from './services/tmdbApi';
+import { Movie, TVShow, Person, tmdbApi, setApiLanguage } from './services/tmdbApi';
+import { ContentLanguageProvider, useContentLanguage, getApiLanguageCode } from './contexts/LanguageContext';
 
 const AppContent: React.FC = () => {
+  const { contentLanguage } = useContentLanguage();
   const [currentPage, setCurrentPage] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -39,8 +41,14 @@ const AppContent: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Movie | TVShow | Person | null>(null);
   const [selectedItemType, setSelectedItemType] = useState<'movie' | 'tv' | 'person' | null>(null);
 
+  // Update API language when content language changes
+  useEffect(() => {
+    const apiLanguage = getApiLanguageCode(contentLanguage);
+    setApiLanguage(apiLanguage);
+  }, [contentLanguage]);
 
-  // Fetch data on component mount
+
+  // Fetch data on component mount and when language changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,7 +84,7 @@ const AppContent: React.FC = () => {
     };
 
     fetchData();
-  }, []); // Fetch data on mount
+  }, [contentLanguage]); // Fetch data on mount and when language changes
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -270,7 +278,11 @@ const AppContent: React.FC = () => {
 };
 
 function App() {
-  return <AppContent />;
+  return (
+    <ContentLanguageProvider>
+      <AppContent />
+    </ContentLanguageProvider>
+  );
 }
 
 export default App;

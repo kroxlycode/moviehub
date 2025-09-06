@@ -1,8 +1,16 @@
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY || 'YOUR_API_KEY';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-// Language support
-const currentLanguage = 'tr';
+// Dynamic language support - will be set by API functions
+let currentApiLanguage = 'tr-TR';
+
+// Set the current API language
+export const setApiLanguage = (language: string) => {
+  currentApiLanguage = language;
+};
+
+// Get the current API language
+export const getApiLanguage = () => currentApiLanguage;
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
 
@@ -236,54 +244,54 @@ export const tmdbApi = {
 
   // Movies
   getPopularMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/movie/popular', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/movie/popular', { page, language: currentApiLanguage }));
     return response.json();
   },
 
   getTopRatedMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/movie/top_rated', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/movie/top_rated', { page, language: currentApiLanguage }));
     return response.json();
   },
 
   getNowPlayingMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/movie/now_playing', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/movie/now_playing', { page, language: currentApiLanguage }));
     return response.json();
   },
 
   getUpcomingMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/movie/upcoming', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/movie/upcoming', { page, language: currentApiLanguage }));
     return response.json();
   },
 
   getMovieDetails: async (id: number): Promise<MovieDetails> => {
-    const response = await fetch(buildUrl(`/movie/${id}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/movie/${id}`, { language: currentApiLanguage }));
     return response.json();
   },
 
 
   getMovieCredits: async (id: number): Promise<{ cast: Cast[]; crew: Crew[] }> => {
-    const response = await fetch(buildUrl(`/movie/${id}/credits`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/movie/${id}/credits`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getSimilarMovies: async (id: number, page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl(`/movie/${id}/similar`, { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/movie/${id}/similar`, { page, language: currentApiLanguage }));
     return response.json();
   },
 
   // TV Shows
   getPopularTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/tv/popular', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/tv/popular', { page, language: currentApiLanguage }));
     return response.json();
   },
 
   getTopRatedTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/tv/top_rated', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/tv/top_rated', { page, language: currentApiLanguage }));
     return response.json();
   },
 
   getOnTheAirTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/tv/on_the_air', { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/tv/on_the_air', { page, language: currentApiLanguage }));
     return response.json();
  },
 
@@ -291,38 +299,38 @@ export const tmdbApi = {
 
   // Trending
   getTrending: async (mediaType: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<Movie | TVShow>> => {
-    const response = await fetch(buildUrl(`/trending/${mediaType}/${timeWindow}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/trending/${mediaType}/${timeWindow}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getTrendingTVShows: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl(`/trending/tv/${timeWindow}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/trending/tv/${timeWindow}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getTrendingAll: async (timeWindow: 'day' | 'week' = 'week'): Promise<ApiResponse<Movie | TVShow>> => {
-    const response = await fetch(buildUrl(`/trending/all/${timeWindow}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/trending/all/${timeWindow}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   // Search
   searchMulti: async (query: string, page: number = 1): Promise<ApiResponse<Movie | TVShow | Person>> => {
-    const response = await fetch(buildUrl('/search/multi', { query, page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/search/multi', { query, page, language: currentApiLanguage }));
     return response.json();
   },
 
   searchMovies: async (query: string, page: number = 1): Promise<ApiResponse<Movie>> => {
-    const response = await fetch(buildUrl('/search/movie', { query, page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/search/movie', { query, page, language: currentApiLanguage }));
     return response.json();
   },
 
   searchTVShows: async (query: string, page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl('/search/tv', { query, page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/search/tv', { query, page, language: currentApiLanguage }));
     return response.json();
   },
 
   searchPeople: async (query: string, page: number = 1): Promise<ApiResponse<Person>> => {
-    const response = await fetch(buildUrl('/search/person', { query, page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl('/search/person', { query, page, language: currentApiLanguage }));
     return response.json();
   },
 
@@ -368,26 +376,26 @@ export const tmdbApi = {
 
   // Person details
   getPersonDetails: async (id: number): Promise<Person> => {
-    const response = await fetch(buildUrl(`/person/${id}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/person/${id}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getPersonMovieCredits: async (id: number): Promise<{ cast: Movie[]; crew: Movie[] }> => {
-    const response = await fetch(buildUrl(`/person/${id}/movie_credits`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/person/${id}/movie_credits`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getPersonTVCredits: async (id: number): Promise<{ cast: TVShow[]; crew: TVShow[] }> => {
-    const response = await fetch(buildUrl(`/person/${id}/tv_credits`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/person/${id}/tv_credits`, { language: currentApiLanguage }));
     return response.json();
   },
 
   // Get movie videos (trailers) with language preference
   getMovieVideos: async (movieId: number): Promise<VideosResponse> => {
     // Try to get videos in current language first, then fallback to all videos
-    if (currentLanguage === 'tr') {
+    if (currentApiLanguage === 'tr-TR') {
       try {
-        const turkishResponse = await fetch(buildUrl(`/movie/${movieId}/videos`, { language: 'tr-TR' }));
+        const turkishResponse = await fetch(buildUrl(`/movie/${movieId}/videos`, { language: currentApiLanguage }));
         const turkishData = await turkishResponse.json();
         
         if (turkishData.results && turkishData.results.length > 0) {
@@ -406,9 +414,9 @@ export const tmdbApi = {
   // Get TV show videos (trailers) with language preference
   getTVVideos: async (tvId: number): Promise<VideosResponse> => {
     // Try to get videos in current language first, then fallback to all videos
-    if (currentLanguage === 'tr') {
+    if (currentApiLanguage === 'tr-TR') {
       try {
-        const turkishResponse = await fetch(buildUrl(`/tv/${tvId}/videos`, { language: 'tr-TR' }));
+        const turkishResponse = await fetch(buildUrl(`/tv/${tvId}/videos`, { language: currentApiLanguage }));
         const turkishData = await turkishResponse.json();
         
         if (turkishData.results && turkishData.results.length > 0) {
@@ -426,23 +434,23 @@ export const tmdbApi = {
 
   // TV Show Details
   getTVShowDetails: async (id: number): Promise<TVShowDetails> => {
-    const response = await fetch(buildUrl(`/tv/${id}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/tv/${id}`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getTVShowCredits: async (id: number): Promise<{ cast: Cast[]; crew: Crew[] }> => {
-    const response = await fetch(buildUrl(`/tv/${id}/credits`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/tv/${id}/credits`, { language: currentApiLanguage }));
     return response.json();
   },
 
   getSimilarTVShows: async (id: number, page: number = 1): Promise<ApiResponse<TVShow>> => {
-    const response = await fetch(buildUrl(`/tv/${id}/similar`, { page, language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/tv/${id}/similar`, { page, language: currentApiLanguage }));
     return response.json();
   },
 
   // Season Details
   getSeasonDetails: async (tvId: number, seasonNumber: number): Promise<{ episodes: Episode[] }> => {
-    const response = await fetch(buildUrl(`/tv/${tvId}/season/${seasonNumber}`, { language: 'tr-TR' }));
+    const response = await fetch(buildUrl(`/tv/${tvId}/season/${seasonNumber}`, { language: currentApiLanguage }));
     return response.json();
   }
 };

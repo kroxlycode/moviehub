@@ -23,7 +23,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   const loadMovieDetails = async () => {
     try {
       setLoading(true);
-      
+
       const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
         tmdbApi.getMovieDetails(movieId),
         tmdbApi.getMovieCredits(movieId),
@@ -120,7 +120,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
               {/* Movie Info */}
               <div className="flex-1 text-white">
                 <h1 className="text-4xl lg:text-5xl font-bold mb-4">{movie.title}</h1>
-                
+
                 {movie.tagline && (
                   <p className="text-xl text-gray-300 italic mb-6">{movie.tagline}</p>
                 )}
@@ -131,12 +131,12 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
                     <span className="font-semibold">{movie.vote_average.toFixed(1)}</span>
                   </div>
-                  
+
                   <div className="flex items-center space-x-1 text-gray-300">
                     <Calendar className="w-4 h-4" />
                     <span>{new Date(movie.release_date).getFullYear()}</span>
                   </div>
-                  
+
                   <div className="flex items-center space-x-1 text-gray-300">
                     <Clock className="w-4 h-4" />
                     <span>{formatRuntime(movie.runtime)}</span>
@@ -169,17 +169,17 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                     <Play className="w-5 h-5" />
                     <span>Fragman İzle</span>
                   </button>
-                  
+
                   <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
                     <Heart className="w-5 h-5" />
                     <span>Favorilere Ekle</span>
                   </button>
-                  
+
                   <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
                     <Bookmark className="w-5 h-5" />
                     <span>İzleme Listesi</span>
                   </button>
-                  
+
                   <button className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
                     <Share2 className="w-5 h-5" />
                     <span>Paylaş</span>
@@ -234,11 +234,10 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`py-4 px-2 border-b-2 transition-colors ${
-                  activeTab === tab.id
+                className={`py-4 px-2 border-b-2 transition-colors ${activeTab === tab.id
                     ? 'border-secondary text-secondary'
                     : 'border-transparent text-gray-400 hover:text-white'
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
