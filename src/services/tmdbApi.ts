@@ -385,14 +385,44 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // Get movie videos (trailers)
+  // Get movie videos (trailers) with language preference
   getMovieVideos: async (movieId: number): Promise<VideosResponse> => {
+    // Try to get videos in current language first, then fallback to all videos
+    if (currentLanguage === 'tr') {
+      try {
+        const turkishResponse = await fetch(buildUrl(`/movie/${movieId}/videos`, { language: 'tr-TR' }));
+        const turkishData = await turkishResponse.json();
+        
+        if (turkishData.results && turkishData.results.length > 0) {
+          return turkishData;
+        }
+      } catch (error) {
+        console.log('Turkish videos not available, falling back to default');
+      }
+    }
+    
+    // Fallback to default language videos
     const response = await fetch(buildUrl(`/movie/${movieId}/videos`));
     return response.json();
   },
 
-  // Get TV show videos (trailers)
+  // Get TV show videos (trailers) with language preference
   getTVVideos: async (tvId: number): Promise<VideosResponse> => {
+    // Try to get videos in current language first, then fallback to all videos
+    if (currentLanguage === 'tr') {
+      try {
+        const turkishResponse = await fetch(buildUrl(`/tv/${tvId}/videos`, { language: 'tr-TR' }));
+        const turkishData = await turkishResponse.json();
+        
+        if (turkishData.results && turkishData.results.length > 0) {
+          return turkishData;
+        }
+      } catch (error) {
+        console.log('Turkish videos not available, falling back to default');
+      }
+    }
+    
+    // Fallback to default language videos
     const response = await fetch(buildUrl(`/tv/${tvId}/videos`));
     return response.json();
   },

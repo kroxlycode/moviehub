@@ -11,6 +11,7 @@ import ActorsPage from './pages/PeoplePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
+import ActorDetailPage from './pages/ActorDetailPage';
 import TrailerModal from './components/TrailerModal';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { Movie, TVShow, Person, tmdbApi, setLanguage } from './services/tmdbApi';
@@ -37,8 +38,8 @@ const AppContent: React.FC = () => {
   const [trailerTitle, setTrailerTitle] = useState('');
 
   // Detail page states
-  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-  const [selectedTVShowId, setSelectedTVShowId] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Movie | TVShow | Person | null>(null);
+  const [selectedItemType, setSelectedItemType] = useState<'movie' | 'tv' | 'person' | null>(null);
 
   // Language effect
   useEffect(() => {
@@ -92,16 +93,25 @@ const AppContent: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const handleItemClick = (item: Movie | TVShow | Person, type?: 'movie' | 'tv' | 'person') => {
-    if ('title' in item || type === 'movie') {
-      setSelectedMovieId(item.id);
+  const handleItemClick = (item: Movie | TVShow | Person, type: 'movie' | 'tv' | 'person') => {
+    setSelectedItem(item);
+    setSelectedItemType(type);
+    
+    if (type === 'movie') {
       setCurrentPage('movie-detail');
-    } else if ('name' in item && 'first_air_date' in item || type === 'tv') {
-      setSelectedTVShowId(item.id);
+    } else if (type === 'tv') {
       setCurrentPage('tv-detail');
     } else if (type === 'person') {
-      // Handle person click - future implementation
-      console.log('Person clicked:', item);
+      setCurrentPage('actor-detail');
+    }
+  };
+
+  // Wrapper functions for HorizontalScroll components
+  const handleMovieClick = (item: Movie | TVShow) => {
+    if ('title' in item) {
+      handleItemClick(item, 'movie');
+    } else {
+      handleItemClick(item, 'tv');
     }
   };
 
@@ -133,7 +143,7 @@ const AppContent: React.FC = () => {
           <>
             <HeroBanner 
               items={trendingItems} 
-              onItemClick={handleItemClick}
+              onItemClick={handleMovieClick}
               onPlayTrailer={handlePlayTrailer}
             />
             
@@ -141,7 +151,7 @@ const AppContent: React.FC = () => {
               <HorizontalScroll
                 title={t('home.popularMovies')}
                 items={popularMovies}
-                onItemClick={handleItemClick}
+                onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
                 loading={loading}
               />
@@ -149,7 +159,7 @@ const AppContent: React.FC = () => {
               <HorizontalScroll
                 title={t('home.popularTVShows')}
                 items={popularTVShows}
-                onItemClick={handleItemClick}
+                onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
                 loading={loading}
               />
@@ -157,7 +167,7 @@ const AppContent: React.FC = () => {
               <HorizontalScroll
                 title={t('home.topRatedMovies')}
                 items={topRatedMovies}
-                onItemClick={handleItemClick}
+                onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
                 loading={loading}
               />
@@ -165,7 +175,7 @@ const AppContent: React.FC = () => {
               <HorizontalScroll
                 title={t('home.nowPlayingMovies')}
                 items={nowPlayingMovies}
-                onItemClick={handleItemClick}
+                onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
                 loading={loading}
               />
@@ -173,7 +183,7 @@ const AppContent: React.FC = () => {
               <HorizontalScroll
                 title={t('home.upcomingMovies')}
                 items={upcomingMovies}
-                onItemClick={handleItemClick}
+                onItemClick={handleMovieClick}
                 onPlayTrailer={handlePlayTrailer}
                 loading={loading}
               />
@@ -201,20 +211,30 @@ const AppContent: React.FC = () => {
         ) : null;
       
       case 'movie-detail':
-        return selectedMovieId ? (
+        return selectedItem && selectedItemType === 'movie' ? (
           <MovieDetailPage 
-            movieId={selectedMovieId} 
+            movieId={selectedItem.id}
             onBack={() => setCurrentPage('home')}
             onPlayTrailer={handlePlayTrailer}
           />
         ) : null;
       
       case 'tv-detail':
-        return selectedTVShowId ? (
+        return selectedItem && selectedItemType === 'tv' ? (
           <TVShowDetailPage 
-            tvShowId={selectedTVShowId} 
+            tvShowId={selectedItem.id}
             onBack={() => setCurrentPage('home')}
             onPlayTrailer={handlePlayTrailer}
+          />
+        ) : null;
+      
+      case 'actor-detail':
+        return selectedItem && selectedItemType === 'person' ? (
+          <ActorDetailPage 
+            actorId={selectedItem.id}
+            onBack={() => setCurrentPage('people')}
+            onMovieClick={(movie) => handleItemClick(movie, 'movie')}
+            onTVShowClick={(tvShow) => handleItemClick(tvShow, 'tv')}
           />
         ) : null;
       

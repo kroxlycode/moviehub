@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users, ChevronDown, ChevronUp } from 'lucide-react';
-import { TVShow, TVShowDetails, Cast, Crew, Season, Episode, tmdbApi, getImageUrl } from '../services/tmdbApi';
+import { TVShow, TVShowDetails, Cast, Crew, Season, Episode, tmdbApi, getImageUrl, setLanguage } from '../services/tmdbApi';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface TVShowDetailPageProps {
   tvShowId: number;
@@ -9,6 +10,7 @@ interface TVShowDetailPageProps {
 }
 
 const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, onPlayTrailer }) => {
+  const { t, language } = useLanguage();
   const [tvShow, setTVShow] = useState<TVShowDetails | null>(null);
   const [cast, setCast] = useState<Cast[]>([]);
   const [crew, setCrew] = useState<Crew[]>([]);
@@ -22,11 +24,15 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
 
   useEffect(() => {
     loadTVShowDetails();
-  }, [tvShowId]);
+  }, [tvShowId, language]);
 
   const loadTVShowDetails = async () => {
     try {
       setLoading(true);
+      
+      // Set language for API calls
+      setLanguage(language);
+      
       const [tvShowResponse, creditsResponse, similarResponse] = await Promise.all([
         tmdbApi.getTVShowDetails(tvShowId),
         tmdbApi.getTVShowCredits(tvShowId),
@@ -49,6 +55,10 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
     
     try {
       setLoadingEpisodes(true);
+      
+      // Set language for API calls
+      setLanguage(language);
+      
       const seasonResponse = await tmdbApi.getSeasonDetails(tvShow.id, seasonNumber);
       setEpisodes(seasonResponse.episodes);
       setSelectedSeason(tvShow.seasons.find(s => s.season_number === seasonNumber) || null);
