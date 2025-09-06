@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Movie, TVShow } from '../services/tmdbApi';
 import MovieCard from './MovieCard';
 
+type MediaType = 'movie' | 'tv' | 'person';
+
 interface HorizontalScrollProps {
   title: string;
   items?: (Movie | TVShow)[];
@@ -10,6 +12,8 @@ interface HorizontalScrollProps {
   onPlayTrailer?: (item: Movie | TVShow) => void;
   loading?: boolean;
   cardSize?: 'small' | 'medium' | 'large';
+  viewAllLink?: string;
+  type?: MediaType;
 }
 
 const HorizontalScroll: React.FC<HorizontalScrollProps> = ({

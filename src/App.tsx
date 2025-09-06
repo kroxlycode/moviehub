@@ -182,6 +182,26 @@ const App: React.FC = () => {
     }
   };
 
+  const handlePlayTrailer = async (item: Movie | TVShow) => {
+    const type = 'title' in item ? 'movie' : 'tv';
+    try {
+      const videos = type === 'movie' 
+        ? await tmdbApi.getMovieVideos(item.id)
+        : await tmdbApi.getTVVideos(item.id);
+      
+      const trailer = videos.results.find((v: any) => v.type === 'Trailer' && v.site === 'YouTube');
+      
+      if (trailer) {
+        window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+      } else {
+        toast.info('Fragman bulunamadı');
+      }
+    } catch (error) {
+      console.error('Error playing trailer:', error);
+      toast.error('Fragman yüklenirken bir hata oluştu');
+    }
+  };
+
   return (
     <Layout>
       <Header 
@@ -194,11 +214,7 @@ const App: React.FC = () => {
         <Route 
           path="/" 
           element={
-            <HomePage 
-              onMovieClick={handleMovieClick}
-              onTVShowClick={handleTVShowClick}
-              onPersonClick={handlePersonClick}
-            />
+            <HomePage onPlayTrailer={handlePlayTrailer} />
           } 
         />
         <Route 
@@ -206,6 +222,7 @@ const App: React.FC = () => {
           element={
             <MoviesPage 
               onMovieClick={handleMovieClick}
+              onPlayTrailer={handlePlayTrailer}
             />
           } 
         />
@@ -214,6 +231,7 @@ const App: React.FC = () => {
           element={
             <TVShowsPage 
               onTVShowClick={handleTVShowClick}
+              onPlayTrailer={handlePlayTrailer}
             />
           } 
         />
@@ -232,9 +250,10 @@ const App: React.FC = () => {
           path="/ara/:query" 
           element={
             <SearchResultsPage 
-              onMovieClick={handleMovieClick}
-              onTVShowClick={handleTVShowClick}
-              onPersonClick={handlePersonClick}
+              query={''} // This will be set by the route param
+              onBack={() => navigate(-1)}
+              onItemClick={handleItemClick}
+              onPlayTrailer={handlePlayTrailer}
             />
           } 
         />

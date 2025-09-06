@@ -5,7 +5,11 @@ import HeroBanner from '../components/HeroBanner';
 import HorizontalScroll from '../components/HorizontalScroll';
 import { Movie, TVShow, tmdbApi } from '../services/tmdbApi';
 
-export default function HomePage() {
+interface HomePageProps {
+  onPlayTrailer: (item: Movie | TVShow) => void;
+}
+
+export default function HomePage({ onPlayTrailer }: HomePageProps) {
   const navigate = useNavigate();
   const [trendingItems, setTrendingItems] = useState<(Movie | TVShow)[]>([]);
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
@@ -50,9 +54,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Header />
       <main>
-        <HeroBanner items={trendingItems} onItemClick={handleItemClick} />
+        <HeroBanner 
+          items={trendingItems} 
+          onItemClick={handleItemClick} 
+          onPlayTrailer={onPlayTrailer} 
+        />
         
         <section className="py-8">
           <HorizontalScroll
@@ -60,7 +67,7 @@ export default function HomePage() {
             items={popularMovies}
             type="movie"
             onItemClick={handleItemClick}
-            onPlayTrailer={handlePlayTrailer}
+            onPlayTrailer={onPlayTrailer}
             viewAllLink="/filmler"
           />
           
@@ -69,7 +76,7 @@ export default function HomePage() {
             items={popularTVShows}
             type="tv"
             onItemClick={handleItemClick}
-            onPlayTrailer={handlePlayTrailer}
+            onPlayTrailer={onPlayTrailer}
             viewAllLink="/diziler"
           />
         </section>

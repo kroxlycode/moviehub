@@ -6,11 +6,11 @@ import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
 import LayoutToggle from '../components/LayoutToggle';
 
-interface ActorsPageProps {
-  onActorClick: (actor: Person) => void;
+interface PeoplePageProps {
+  onPersonClick: (person: Person) => void;
 }
 
-const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
+const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
   const [actors, setActors] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -128,7 +128,6 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
       setTotalPages(Math.min(response.total_pages, 500));
     } catch (error) {
       console.error('Error searching actors:', error);
-      setActors([]);
     } finally {
       setLoading(false);
     }
@@ -159,6 +158,12 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
     }
   };
 
+  const handlePersonClick = (item: Person | Movie | TVShow) => {
+    if ('known_for_department' in item) {
+      onPersonClick(item);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Page Header */}
@@ -167,9 +172,9 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
           <Users className="w-8 h-8 text-dark" />
         </div>
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white">Oyuncular</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white">People</h1>
           <p className="text-gray-400 mt-1">
-            Ünlü oyuncuları keşfedin ve filmografilerini inceleyin
+            Discover popular people and explore their filmographies
           </p>
         </div>
       </div>
@@ -182,7 +187,7 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
               type="text"
               value={searchQuery}
               onChange={handleSearchInputChange}
-              placeholder="Oyuncu ara..."
+              placeholder="Search people..."
               className="w-full px-4 py-3 pl-12 pr-4 bg-dark-lighter/80 backdrop-blur-sm border border-gray-custom/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
             />
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -209,7 +214,7 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
       {/* Actors Grid */}
       <GridLayout
         items={actors}
-        onItemClick={(item) => onActorClick(item as Person)}
+        onItemClick={handlePersonClick}
         loading={loading}
         type="person"
         layout={layout}
@@ -244,4 +249,4 @@ const ActorsPage: React.FC<ActorsPageProps> = ({ onActorClick }) => {
   );
 };
 
-export default ActorsPage;
+export default PeoplePage;
