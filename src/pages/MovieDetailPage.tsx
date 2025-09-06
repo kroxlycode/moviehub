@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Heart, Bookmark, Share2, Star, Calendar, Clock, Globe, Users } from 'lucide-react';
-import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
+import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl, setLanguage } from '../services/tmdbApi';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface MovieDetailPageProps {
   movieId: number;
@@ -9,6 +10,7 @@ interface MovieDetailPageProps {
 }
 
 const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPlayTrailer }) => {
+  const { t, language } = useLanguage();
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [cast, setCast] = useState<Cast[]>([]);
   const [crew, setCrew] = useState<Crew[]>([]);
@@ -18,11 +20,15 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
 
   useEffect(() => {
     loadMovieDetails();
-  }, [movieId]);
+  }, [movieId, language]);
 
   const loadMovieDetails = async () => {
     try {
       setLoading(true);
+      
+      // Set language for API calls
+      setLanguage(language);
+      
       const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
         tmdbApi.getMovieDetails(movieId),
         tmdbApi.getMovieCredits(movieId),
@@ -55,7 +61,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-dark flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-300">Film detayları yükleniyor...</p>
@@ -66,7 +72,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
 
   if (!movie) {
     return (
-      <div className="min-h-screen bg-gradient-dark flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-300 mb-4">Film bulunamadı</p>
           <button
@@ -81,7 +87,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   }
 
   return (
-    <div className="min-h-screen bg-gradient-dark">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative">
         {/* Background Image */}

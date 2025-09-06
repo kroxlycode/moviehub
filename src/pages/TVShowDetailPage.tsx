@@ -83,7 +83,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-dark flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-300">Dizi detayları yükleniyor...</p>
@@ -94,7 +94,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
 
   if (!tvShow) {
     return (
-      <div className="min-h-screen bg-gradient-dark flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-300 mb-4">Dizi bulunamadı</p>
           <button
@@ -109,7 +109,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
   }
 
   return (
-    <div className="min-h-screen bg-gradient-dark">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative">
         {/* Background Image */}

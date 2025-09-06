@@ -6,7 +6,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gradient-dark">
+    <div className="min-h-screen">
       <div className="pt-20"> {/* Account for fixed header */}
         {children}
       </div>

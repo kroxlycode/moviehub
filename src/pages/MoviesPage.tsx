@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Film } from 'lucide-react';
-import { Movie, tmdbApi } from '../services/tmdbApi';
+import { Movie, tmdbApi, setLanguage } from '../services/tmdbApi';
 import FilterBar from '../components/FilterBar';
 import GridLayout from '../components/GridLayout';
 import Pagination from '../components/Pagination';
 import LayoutToggle from '../components/LayoutToggle';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface FilterOptions {
   genre?: number;
@@ -22,6 +23,7 @@ interface MoviesPageProps {
 }
 
 const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) => {
+  const { t, language } = useLanguage();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,11 +33,14 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
 
   useEffect(() => {
     loadMovies();
-  }, [currentPage, filters]);
+  }, [currentPage, filters, language]);
 
   const loadMovies = async () => {
     try {
       setLoading(true);
+      
+      // Set language for API calls
+      setLanguage(language);
       
       const params = {
         page: currentPage,
