@@ -46,26 +46,28 @@ export const useTrailer = (item: Movie | TVShow | null) => {
   const findBestTrailer = (videos: Video[]): Video | null => {
     if (!videos || videos.length === 0) return null;
     
-    // Try to find an official trailer in the current language
-    const currentLang = 'tr'; // Default to Turkish, or get from your app's language context
+    // Define language preferences in order of priority
+    const preferredLangs = ['tr', 'en'];
     
-    // 1. Official trailer in current language
-    const officialInCurrentLang = videos.find(
-      (video) => 
-        video.type === 'Trailer' && 
-        video.official && 
-        video.iso_639_1 === currentLang
-    );
+    // 1. Try to find an official trailer in preferred languages
+    for (const lang of preferredLangs) {
+      const officialInLang = videos.find(
+        video => 
+          video.type === 'Trailer' && 
+          video.official && 
+          video.iso_639_1 === lang
+      );
+      
+      if (officialInLang) return officialInLang;
+    }
     
-    if (officialInCurrentLang) return officialInCurrentLang;
-    
-    // 2. Any official trailer
+    // 2. Try to find any official trailer
     const anyOfficialTrailer = videos.find(
-      (video) => video.type === 'Trailer' && video.official
+      video => video.type === 'Trailer' && video.official
     );
     
-    // 3. Any trailer
-    const anyTrailer = videos.find((video) => video.type === 'Trailer');
+    // 3. Try to find any trailer
+    const anyTrailer = videos.find(video => video.type === 'Trailer');
     
     return anyOfficialTrailer || anyTrailer || null;
   };

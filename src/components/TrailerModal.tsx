@@ -28,30 +28,43 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
   const findBestTrailer = () => {
     if (!videos || videos.length === 0) return null;
     
-    // Try to find an official trailer in the current language
-    const officialInCurrentLang = videos.find(
-      (video) => 
-        video.type === 'Trailer' && 
-        video.official && 
-        video.iso_639_1 === language.split('-')[0]
-    );
+    // Define language preferences in order of priority
+    const preferredLangs = ['tr', 'en', ''];
     
-    if (officialInCurrentLang) return officialInCurrentLang;
+    // 1. Try to find an official trailer in preferred languages
+    for (const lang of preferredLangs) {
+      const officialInLang = videos.find(
+        video => 
+          video.type === 'Trailer' && 
+          video.official && 
+          (lang === '' ? true : video.iso_639_1 === lang)
+      );
+      
+      if (officialInLang) return officialInLang;
+    }
     
-    // If no trailer in current language, try to find any official trailer
-    const anyOfficialTrailer = videos.find(
-      (video) => video.type === 'Trailer' && video.official
-    );
-    
-    // If no official trailer, try to find any trailer
-    return anyOfficialTrailer || videos[0];
+    // 2. Try to find any trailer
+    return videos.find(video => video.type === 'Trailer') || videos[0] || null;
   };
 
   const selectedTrailer = videoKey 
     ? { key: videoKey } 
     : findBestTrailer();
 
-  // Reset loading state when modal opens or video changes
+  // Reset loading state when modal opens 
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedTrailer?.key) {
+      setIsLoading(true);
+      setError(null);
+      // Force iframe to reload with the correct parameters
+      if (iframeRef.current) {
+        const baseUrl = `https://www.youtube.com/embed/${selectedTrailer.key}`;
+        iframeRef.current.src = `${baseUrl}?autoplay=1&modestbranding=1&rel=0`;
+      }
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       setIsLoading(true);
@@ -64,8 +77,18 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
     }
   }, [isOpen, selectedTrailer]);
 
+  // Handle iframe load
   const handleIframeLoad = () => {
     setIsLoading(false);
+    
+    // Ensure the YouTube embed doesn't redirect
+    if (iframeRef.current) {
+      const iframe = iframeRef.current;
+      const src = iframe.src;
+      if (src.includes('youtube.com/embed/') && !src.includes('autoplay=1')) {
+        iframe.src = `${src}${src.includes('?') ? '&' : '?'}autoplay=1&modestbranding=1&rel=0`;
+      }
+    }
   };
 
   const handleIframeError = () => {
@@ -152,21 +175,23 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
             <>
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-secondary"></div>
                 </div>
               )}
               <iframe
                 ref={iframeRef}
-                src={`https://www.youtube-nocookie.com/embed/${selectedTrailer.key}?autoplay=1&mute=1&rel=0&modestbranding=1&showinfo=0&cc_lang_pref=${language}&hl=${language}&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`}
-                title={`${title} Trailer`}
-                className={`w-full h-full ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full ${isLoading ? 'invisible' : 'visible'}`}
+                src={selectedTrailer?.key 
+                  ? `https://www.youtube.com/embed/${selectedTrailer.key}?autoplay=1&modestbranding=1&rel=0` 
+                  : ''}
+                title={title}
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 onLoad={handleIframeLoad}
-                onError={handleIframeError}
-                loading="eager"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                onError={() => {
+                  setError('Failed to load trailer');
+                  setIsLoading(false);
+                }}
               />
             </>
           ) : (
