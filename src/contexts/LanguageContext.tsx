@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
-// Content language type - for API content
 type ContentLanguage = 'tr' | 'en' | 'es' | 'fr' | 'de' | 'it' | 'pt' | 'ja' | 'ko';
 
 interface ContentLanguageContextType {
@@ -10,7 +9,6 @@ interface ContentLanguageContextType {
 
 const ContentLanguageContext = createContext<ContentLanguageContextType | undefined>(undefined);
 
-// Language options for content
 export const contentLanguageOptions = [
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -23,7 +21,6 @@ export const contentLanguageOptions = [
   { code: 'ko', name: '한국어', flag: '🇰🇷' },
 ] as const;
 
-// Map content language to API language code
 export const getApiLanguageCode = (contentLang: ContentLanguage): string => {
   const mapping: Record<ContentLanguage, string> = {
     'tr': 'tr-TR',
@@ -61,6 +58,5 @@ export const useContentLanguage = (): ContentLanguageContextType => {
   return context;
 };
 
-// Legacy export for backward compatibility (will be removed)
 export const useLanguage = useContentLanguage;
 export const LanguageProvider = ContentLanguageProvider;

@@ -1,20 +1,16 @@
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY || 'YOUR_API_KEY';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-// Dynamic language support - will be set by API functions
 let currentApiLanguage = 'tr-TR';
 
-// Set the current API language
 export const setApiLanguage = (language: string) => {
   currentApiLanguage = language;
 };
 
-// Get the current API language
 export const getApiLanguage = () => currentApiLanguage;
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
 
-// Image size configurations
 export const IMAGE_SIZES = {
   poster: {
     small: 'w185',
@@ -36,7 +32,6 @@ export const IMAGE_SIZES = {
   }
 };
 
-// Type definitions
 export interface Movie {
   id: number;
   title: string;
@@ -210,7 +205,6 @@ export interface Crew {
   profile_path: string | null;
 }
 
-// API Response types
 export interface ApiResponse<T> {
   page: number;
   results: T[];
@@ -218,7 +212,6 @@ export interface ApiResponse<T> {
   total_results: number;
 }
 
-// Enhanced fetch with retry logic
 const fetchWithRetry = async (url: string, options: RequestInit = {}, retries = 3, delay = 1000): Promise<Response> => {
   try {
     const response = await fetch(url, {
@@ -248,24 +241,19 @@ const fetchWithRetry = async (url: string, options: RequestInit = {}, retries = 
   }
 };
 
-// Utility function to build API URLs
 const buildUrl = (endpoint: string, params: Record<string, any> = {}): string => {
   try {
-    // Ensure BASE_URL ends with a slash and endpoint doesn't start with one
     const base = BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL;
     const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
     
     const url = new URL(`${base}${path}`);
     
-    // Always include the API key
     url.searchParams.append('api_key', API_KEY);
     
-    // Include language parameter if not already specified
     if (!params.language && currentApiLanguage) {
       url.searchParams.append('language', currentApiLanguage);
     }
     
-    // Add other parameters
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         url.searchParams.append(key, value.toString());
@@ -279,7 +267,6 @@ const buildUrl = (endpoint: string, params: Record<string, any> = {}): string =>
   }
 };
 
-// Utility function to build image URLs
 export const getImageUrl = (path: string | null, type: 'poster' | 'backdrop' | 'profile', size: string = 'medium'): string => {
   if (!path) return '/placeholder-image.jpg';
   
@@ -289,15 +276,12 @@ export const getImageUrl = (path: string | null, type: 'poster' | 'backdrop' | '
   return `${IMAGE_BASE_URL}/${imageSize}${path}`;
 };
 
-// API functions
 export const tmdbApi = {
-  // Get popular people
   getPopularPeople: async (page: number = 1): Promise<ApiResponse<Person>> => {
     const response = await fetch(buildUrl(`/person/popular?page=${page}`));
     return response.json();
   },
 
-  // Movies
   getPopularMovies: async (page: number = 1): Promise<ApiResponse<Movie>> => {
     const response = await fetchWithRetry(buildUrl('/movie/popular', { page }));
     return response.json();
@@ -313,7 +297,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // Get movie genres
   getMovieGenres: async (): Promise<{ genres: Genre[] }> => {
     try {
       const response = await fetchWithRetry(buildUrl('/genre/movie/list', {
@@ -352,7 +335,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // TV Shows
   getPopularTVShows: async (page: number = 1): Promise<ApiResponse<TVShow>> => {
     const response = await fetchWithRetry(buildUrl('/tv/popular', { page }));
     return response.json();
@@ -368,7 +350,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // Get TV show genres
   getTVGenres: async (): Promise<{ genres: Genre[] }> => {
     try {
       const response = await fetchWithRetry(buildUrl('/genre/tv/list', {
@@ -386,8 +367,6 @@ export const tmdbApi = {
     }
   },
 
-
-  // Trending
   getTrending: async (timeWindow: 'day' | 'week' = 'week', mediaType: 'all' | 'movie' | 'tv' | 'person' = 'all'): Promise<ApiResponse<Movie | TVShow | Person>> => {
     const response = await fetchWithRetry(buildUrl(`/trending/${mediaType}/${timeWindow}`));
     return response.json();
@@ -403,7 +382,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // Search
   searchMulti: async (query: string, page: number = 1): Promise<ApiResponse<Movie | TVShow | Person>> => {
     const response = await fetchWithRetry(buildUrl('/search/multi', { query, page }));
     return response.json();
@@ -424,8 +402,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-
-  // Discover
   discoverMovies: async (params: {
     page?: number;
     genre?: number;
@@ -454,7 +430,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // Person details
   getPersonDetails: async (id: number): Promise<Person> => {
     try {
       const response = await fetchWithRetry(buildUrl(`/person/${id}`, { 
@@ -498,16 +473,13 @@ export const tmdbApi = {
     }
   },
 
-  // Get movie videos (trailers) with language preference and fallback to English
   async getMovieVideos(movieId: number): Promise<VideosResponse> {
-    // First try with the current language
     const currentLang = currentApiLanguage;
     const enUrl = buildUrl(`/movie/${movieId}/videos`, {
       language: 'en-US',
     });
 
     try {
-      // Try with current language first
       const url = buildUrl(`/movie/${movieId}/videos`, {
         language: currentLang,
       });
@@ -515,17 +487,14 @@ export const tmdbApi = {
       const response = await fetchWithRetry(url);
       const data: VideosResponse = await response.json();
       
-      // Filter for official trailers in the current language
       const officialTrailers = data.results.filter(
         (video) => video.type === 'Trailer' && video.official
       );
       
-      // If we found trailers in the current language, return them
       if (officialTrailers.length > 0) {
         return { ...data, results: officialTrailers };
       }
       
-      // If no trailers in current language, try English
       if (currentLang !== 'en-US') {
         const enResponse = await fetchWithRetry(enUrl);
         const enData: VideosResponse = await enResponse.json();
@@ -533,10 +502,9 @@ export const tmdbApi = {
           (video) => video.type === 'Trailer' && video.official
         );
         
-        // Return English trailers if found, otherwise return empty array
         return enOfficialTrailers.length > 0 
           ? { ...enData, results: enOfficialTrailers }
-          : { ...data, results: officialTrailers }; // return empty array if no trailers found at all
+          : { ...data, results: officialTrailers }; 
       }
       
       return { ...data, results: officialTrailers };
@@ -546,16 +514,13 @@ export const tmdbApi = {
     }
   },
 
-  // Get TV show videos (trailers) with language preference and fallback to English
   async getTVVideos(tvId: number): Promise<VideosResponse> {
-    // First try with the current language
     const currentLang = currentApiLanguage;
     const enUrl = buildUrl(`/tv/${tvId}/videos`, {
       language: 'en-US',
     });
 
     try {
-      // Try with current language first
       const url = buildUrl(`/tv/${tvId}/videos`, {
         language: currentLang,
       });
@@ -563,17 +528,14 @@ export const tmdbApi = {
       const response = await fetchWithRetry(url);
       const data: VideosResponse = await response.json();
       
-      // Filter for official trailers in the current language
       const officialTrailers = data.results.filter(
         (video) => video.type === 'Trailer' && video.official
       );
       
-      // If we found trailers in the current language, return them
       if (officialTrailers.length > 0) {
         return { ...data, results: officialTrailers };
       }
       
-      // If no trailers in current language, try English
       if (currentLang !== 'en-US') {
         const enResponse = await fetchWithRetry(enUrl);
         const enData: VideosResponse = await enResponse.json();
@@ -581,10 +543,9 @@ export const tmdbApi = {
           (video) => video.type === 'Trailer' && video.official
         );
         
-        // Return English trailers if found, otherwise return empty array
         return enOfficialTrailers.length > 0 
           ? { ...enData, results: enOfficialTrailers }
-          : { ...data, results: officialTrailers }; // return empty array if no trailers found at all
+          : { ...data, results: officialTrailers }; 
       }
       
       return { ...data, results: officialTrailers };
@@ -594,7 +555,6 @@ export const tmdbApi = {
     }
   },
 
-  // TV Show Details
   getTVShowDetails: async (id: number): Promise<TVShowDetails> => {
     const response = await fetch(buildUrl(`/tv/${id}`, { language: currentApiLanguage }));
     return response.json();
@@ -610,7 +570,6 @@ export const tmdbApi = {
     return response.json();
   },
 
-  // Season Details
   getSeasonDetails: async (tvId: number, seasonNumber: number): Promise<{ episodes: Episode[] }> => {
     const response = await fetch(buildUrl(`/tv/${tvId}/season/${seasonNumber}`, { language: currentApiLanguage }));
     return response.json();

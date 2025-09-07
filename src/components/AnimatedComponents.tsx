@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Fade In Animation
 export const FadeIn: React.FC<{
   children: React.ReactNode;
   delay?: number;
@@ -18,7 +17,6 @@ export const FadeIn: React.FC<{
   </motion.div>
 );
 
-// Slide In From Left
 export const SlideInLeft: React.FC<{
   children: React.ReactNode;
   delay?: number;
@@ -35,7 +33,6 @@ export const SlideInLeft: React.FC<{
   </motion.div>
 );
 
-// Slide In From Right
 export const SlideInRight: React.FC<{
   children: React.ReactNode;
   delay?: number;
@@ -52,7 +49,6 @@ export const SlideInRight: React.FC<{
   </motion.div>
 );
 
-// Scale Animation
 export const ScaleIn: React.FC<{
   children: React.ReactNode;
   delay?: number;
@@ -69,7 +65,6 @@ export const ScaleIn: React.FC<{
   </motion.div>
 );
 
-// Stagger Container for Lists
 export const StaggerContainer: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -93,7 +88,6 @@ export const StaggerContainer: React.FC<{
   </motion.div>
 );
 
-// Stagger Item for use within StaggerContainer
 export const StaggerItem: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -109,7 +103,6 @@ export const StaggerItem: React.FC<{
   </motion.div>
 );
 
-// Hover Scale Effect
 export const HoverScale: React.FC<{
   children: React.ReactNode;
   scale?: number;
@@ -124,7 +117,6 @@ export const HoverScale: React.FC<{
   </motion.div>
 );
 
-// Page Transition
 export const PageTransition: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -140,7 +132,6 @@ export const PageTransition: React.FC<{
   </motion.div>
 );
 
-// Modal Animation
 export const ModalAnimation: React.FC<{
   children: React.ReactNode;
   isOpen: boolean;
@@ -171,7 +162,6 @@ export const ModalAnimation: React.FC<{
   </AnimatePresence>
 );
 
-// Loading Spinner Animation
 export const LoadingSpinner: React.FC<{
   size?: number;
   className?: string;
@@ -186,7 +176,6 @@ export const LoadingSpinner: React.FC<{
   </motion.div>
 );
 
-// Bounce Animation
 export const Bounce: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -200,7 +189,6 @@ export const Bounce: React.FC<{
   </motion.div>
 );
 
-// Pulse Animation
 export const Pulse: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -214,7 +202,6 @@ export const Pulse: React.FC<{
   </motion.div>
 );
 
-// Card Hover Effect
 export const CardHover: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -231,7 +218,6 @@ export const CardHover: React.FC<{
   </motion.div>
 );
 
-// Reveal Animation (for scroll-triggered animations)
 export const RevealOnScroll: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -247,7 +233,6 @@ export const RevealOnScroll: React.FC<{
   </motion.div>
 );
 
-// Typewriter Effect
 export const TypeWriter: React.FC<{
   text: string;
   delay?: number;
@@ -271,7 +256,6 @@ export const TypeWriter: React.FC<{
   );
 };
 
-// Floating Animation
 export const Float: React.FC<{
   children: React.ReactNode;
   className?: string;

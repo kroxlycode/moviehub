@@ -1,4 +1,3 @@
-// Import types from tmdbApi
 import type {
   Movie,
   TVShow,
@@ -27,7 +26,6 @@ export type { TVShowDetails };
 export type { Season };
 export type { Episode };
 
-// Common props for components
 export interface WithBackButtonProps {
   onBack: () => void;
 }
@@ -36,7 +34,6 @@ export interface WithPlayTrailerProps {
   onPlayTrailer: (item: Movie | TVShow) => Promise<void>;
 }
 
-// Page props
 export interface HomePageProps extends WithPlayTrailerProps {
   onMovieClick: (movie: Movie) => void;
   onTVShowClick: (tvShow: TVShow) => void;

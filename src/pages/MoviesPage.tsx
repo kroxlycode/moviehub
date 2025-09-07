@@ -50,7 +50,7 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
 
       const response = await tmdbApi.discoverMovies(params);
       setMovies(response.results);
-      setTotalPages(Math.min(response.total_pages, 500)); // TMDb limits to 500 pages
+      setTotalPages(Math.min(response.total_pages, 500)); 
     } catch (error) {
       console.error('Error loading movies:', error);
       setMovies([]);
@@ -61,7 +61,7 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
 
   const handleFilterChange = (newFilters: FilterOptions) => {
     setFilters(newFilters);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1); 
   };
 
   const handlePageChange = (page: number) => {
@@ -71,7 +71,6 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Page Header */}
       <div className="flex items-center space-x-3 mb-8">
         <div className="bg-gradient-to-r from-secondary to-accent p-3 rounded-lg">
           <Film className="w-8 h-8 text-dark" />
@@ -84,7 +83,6 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         </div>
       </div>
 
-      {/* Filter Bar and Layout Toggle */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <FilterBar
           type="movie"
@@ -94,7 +92,6 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         <LayoutToggle layout={layout} onLayoutChange={setLayout} />
       </div>
 
-      {/* Results Info */}
       {!loading && movies.length > 0 && (
         <div className="mb-6">
           <p className="text-gray-400 text-sm">
@@ -112,7 +109,6 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         layout={layout}
       />
 
-      {/* Pagination */}
       {!loading && movies.length > 0 && (
         <Pagination
           currentPage={currentPage}
@@ -122,7 +118,6 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ onMovieClick, onPlayTrailer }) 
         />
       )}
 
-      {/* Empty State */}
       {!loading && movies.length === 0 && (
         <div className="text-center py-12">
           <Film className="w-16 h-16 text-gray-600 mx-auto mb-4" />

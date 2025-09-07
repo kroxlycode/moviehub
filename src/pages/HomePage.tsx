@@ -25,7 +25,6 @@ export default function HomePage({ onPlayTrailer }: HomePageProps) {
           tmdbApi.getPopularTVShows()
         ]);
         
-        // Filter out Person types from trending items
         const filteredTrending = trendingResponse.results.filter(
           (item): item is Movie | TVShow => 'title' in item || 'name' in item
         );

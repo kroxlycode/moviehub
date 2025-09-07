@@ -23,14 +23,10 @@ const Awards: React.FC<AwardsProps> = ({ movieId, tvId, mediaType }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TMDB API doesn't provide awards data directly
-    // This is a mock implementation showing how awards would be displayed
-    // In a real implementation, you'd integrate with external APIs or databases
     
     const fetchAwards = async () => {
       setLoading(true);
       try {
-        // Mock awards data - in real implementation, fetch from awards API
         const mockAwards: Award[] = [
           {
             id: '1',
@@ -61,7 +57,6 @@ const Awards: React.FC<AwardsProps> = ({ movieId, tvId, mediaType }) => {
           }
         ];
         
-        // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         setAwards(mockAwards);
       } catch (error) {

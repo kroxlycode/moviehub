@@ -208,7 +208,6 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ onItemClick, onSearchPa
         )}
       </div>
 
-      {/* Search Results Dropdown */}
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-dark-lighter/95 backdrop-blur-md border border-gray-custom/20 rounded-lg shadow-2xl z-50 max-h-96 overflow-hidden">
           {loading ? (
@@ -263,7 +262,6 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ onItemClick, onSearchPa
                 ))}
               </div>
               
-              {/* See All Results */}
               <div className="border-t border-gray-custom/20 p-3">
                 <button
                   onClick={handleSearchAll}

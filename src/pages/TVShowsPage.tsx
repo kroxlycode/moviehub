@@ -46,7 +46,7 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
 
       const response = await tmdbApi.discoverTVShows(params);
       setTVShows(response.results);
-      setTotalPages(Math.min(response.total_pages, 500)); // TMDb limits to 500 pages
+      setTotalPages(Math.min(response.total_pages, 500)); 
     } catch (error) {
       console.error('Error loading TV shows:', error);
       setTVShows([]);
@@ -57,7 +57,7 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
 
   const handleFilterChange = (newFilters: FilterOptions) => {
     setFilters(newFilters);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1); 
   };
 
   const handlePageChange = (page: number) => {
@@ -67,7 +67,6 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Page Header */}
       <div className="flex items-center space-x-3 mb-8">
         <div className="bg-gradient-to-r from-secondary to-accent p-3 rounded-lg">
           <Tv className="w-8 h-8 text-dark" />
@@ -80,7 +79,6 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         </div>
       </div>
 
-      {/* Filter Bar and Layout Toggle */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <FilterBar
           type="tv"
@@ -90,7 +88,6 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         <LayoutToggle layout={layout} onLayoutChange={setLayout} />
       </div>
 
-      {/* Results Info */}
       {!loading && tvShows.length > 0 && (
         <div className="mb-6">
           <p className="text-gray-400 text-sm">
@@ -99,7 +96,6 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         </div>
       )}
 
-      {/* TV Shows Grid */}
       <GridLayout
         items={tvShows}
         onItemClick={(item) => onTVShowClick(item as TVShow)}
@@ -109,7 +105,6 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         layout={layout}
       />
 
-      {/* Pagination */}
       {!loading && tvShows.length > 0 && (
         <Pagination
           currentPage={currentPage}
@@ -119,7 +114,6 @@ const TVShowsPage: React.FC<TVShowsPageProps> = ({ onTVShowClick, onPlayTrailer 
         />
       )}
 
-      {/* Empty State */}
       {!loading && tvShows.length === 0 && (
         <div className="text-center py-12">
           <Tv className="w-16 h-16 text-gray-600 mx-auto mb-4" />

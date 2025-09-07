@@ -47,7 +47,6 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
         tmdbApi.getPersonTVCredits(actorId)
       ]);
       
-      // Combine movie and TV credits
       const combinedCredits = {
         cast: [...movieCreditsResponse.cast, ...tvCreditsResponse.cast],
         crew: [...movieCreditsResponse.crew, ...tvCreditsResponse.crew]
@@ -155,7 +154,6 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Back Button */}
       <button
         onClick={onBack}
         className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors mb-8"
@@ -164,9 +162,7 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
         <span>Geri Dön</span>
       </button>
 
-      {/* Actor Details */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        {/* Profile Image */}
         <div className="lg:col-span-1">
           <div className="sticky top-8">
             <img
@@ -181,13 +177,11 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
           </div>
         </div>
 
-        {/* Actor Info */}
         <div className="lg:col-span-2">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {actor.name}
           </h1>
 
-          {/* Personal Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {actor.birthday && (
               <div className="flex items-center space-x-3">
@@ -233,7 +227,6 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
             </div>
           </div>
 
-          {/* Biography */}
           {actor.biography && (
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-white mb-4">Biyografi</h2>
@@ -243,7 +236,6 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
             </div>
           )}
 
-          {/* Also Known As */}
           {actor.also_known_as && actor.also_known_as.length > 0 && (
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-white mb-2">Diğer İsimleri</h3>
@@ -262,7 +254,6 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
         </div>
       </div>
 
-      {/* Movies Section */}
       {movies.length > 0 && (
         <div className="mb-12">
           <div className="flex items-center space-x-3 mb-6">
@@ -281,7 +272,6 @@ const ActorDetailPage: React.FC<ActorDetailPageProps> = ({
         </div>
       )}
 
-      {/* TV Shows Section */}
       {tvShows.length > 0 && (
         <div>
           <div className="flex items-center space-x-3 mb-6">

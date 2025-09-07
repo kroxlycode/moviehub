@@ -5,16 +5,13 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Set document title
     document.title = title ? `${title} | MovieHub` : 'MovieHub | Film ve Dizi Dünyası';
 
-    // Set meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', description || 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');
     }
 
-    // Set Open Graph / Facebook tags
     const ogTitle = document.querySelector('meta[property="og:title"]');
     const ogDescription = document.querySelector('meta[property="og:description"]');
     const ogUrl = document.querySelector('meta[property="og:url"]');
@@ -27,7 +24,6 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
     if (ogImage) ogImage.setAttribute('content', image || `${window.location.origin}/og-image.jpg`);
     if (ogType) ogType.setAttribute('content', type);
 
-    // Set Twitter tags
     const twitterTitle = document.querySelector('meta[name="twitter:title"]');
     const twitterDescription = document.querySelector('meta[name="twitter:description"]');
     const twitterImage = document.querySelector('meta[name="twitter:image"]');
@@ -36,13 +32,11 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
     if (twitterDescription) twitterDescription.setAttribute('content', description || 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');
     if (twitterImage) twitterImage.setAttribute('content', image || `${window.location.origin}/twitter-image.jpg`);
 
-    // Set robots meta tag
     const robotsMeta = document.querySelector('meta[name="robots"]');
     if (robotsMeta) {
       robotsMeta.setAttribute('content', noIndex ? 'noindex, nofollow' : 'index, follow');
     }
 
-    // Set canonical URL
     let link = document.querySelector('link[rel="canonical"]');
     if (!link) {
       link = document.createElement('link');
@@ -51,7 +45,6 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
     }
     link.setAttribute('href', window.location.href);
 
-    // Cleanup function to reset title and meta tags when component unmounts
     return () => {
       document.title = 'MovieHub | Film ve Dizi Dünyası';
       if (metaDescription) metaDescription.setAttribute('content', 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');

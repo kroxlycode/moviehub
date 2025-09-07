@@ -72,7 +72,6 @@ export const HorizontalScrollSkeleton: React.FC = () => {
 export const DetailPageSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900">
-      {/* Hero Section Skeleton */}
       <div className="relative h-96 bg-gray-800">
         <Skeleton height="h-full" className="absolute inset-0" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
@@ -96,7 +95,6 @@ export const DetailPageSkeleton: React.FC = () => {
         </div>
       </div>
 
-      {/* Content Skeleton */}
       <div className="container mx-auto px-4 py-8 space-y-8">
         <div className="space-y-4">
           <Skeleton height="h-6" width="w-32" />

@@ -17,16 +17,13 @@ export const useTrailer = (item: Movie | TVShow | null) => {
       let videos: Video[] = [];
       
       if ('title' in item) {
-        // It's a movie
         const response = await tmdbApi.getMovieVideos(item.id);
         videos = response.results;
       } else {
-        // It's a TV show
         const response = await tmdbApi.getTVVideos(item.id);
         videos = response.results;
       }
       
-      // Find the best trailer
       const bestTrailer = findBestTrailer(videos);
       
       if (bestTrailer) {
@@ -46,10 +43,8 @@ export const useTrailer = (item: Movie | TVShow | null) => {
   const findBestTrailer = (videos: Video[]): Video | null => {
     if (!videos || videos.length === 0) return null;
     
-    // Define language preferences in order of priority
     const preferredLangs = ['tr', 'en'];
     
-    // 1. Try to find an official trailer in preferred languages
     for (const lang of preferredLangs) {
       const officialInLang = videos.find(
         video => 
@@ -61,12 +56,10 @@ export const useTrailer = (item: Movie | TVShow | null) => {
       if (officialInLang) return officialInLang;
     }
     
-    // 2. Try to find any official trailer
     const anyOfficialTrailer = videos.find(
       video => video.type === 'Trailer' && video.official
     );
     
-    // 3. Try to find any trailer
     const anyTrailer = videos.find(video => video.type === 'Trailer');
     
     return anyOfficialTrailer || anyTrailer || null;

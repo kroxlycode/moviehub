@@ -37,7 +37,6 @@ const WatchProviders: React.FC<WatchProvidersProps> = ({ movieId, tvId, mediaTyp
         );
         const data = await response.json();
         
-        // Türkiye için sağlayıcıları al, yoksa US'i dene
         const turkeyProviders = data.results?.TR;
         const usProviders = data.results?.US;
         

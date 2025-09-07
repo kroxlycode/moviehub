@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, Mic, MicOff, X, Camera } from 'lucide-react';
 import { tmdbApi, Movie, TVShow, Person } from '../services/tmdbApi';
 
-// Web Speech API type declarations
 interface ISpeechRecognition extends EventTarget {
   continuous: boolean;
   interimResults: boolean;
@@ -48,7 +47,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Web Speech API setup
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -76,10 +74,8 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
     }
   }, []);
 
-  // Yazım hatası düzeltme fonksiyonu
   const correctTypos = (text: string): string => {
     const corrections: { [key: string]: string } = {
-      // Türkçe yaygın yazım hataları
       'flim': 'film',
       'dzi': 'dizi',
       'aksiyn': 'aksiyon',
@@ -103,7 +99,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
       'fantastik': 'fantastik',
       'aile': 'aile',
       'çocuk': 'çocuk',
-      // İngilizce yaygın yazım hataları
       'moive': 'movie',
       'serie': 'series',
       'actoin': 'action',
@@ -124,7 +119,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
 
     let correctedText = text.toLowerCase();
     
-    // Kelime kelime kontrol et ve düzelt
     Object.entries(corrections).forEach(([wrong, correct]) => {
       const regex = new RegExp(`\\b${wrong}\\b`, 'gi');
       correctedText = correctedText.replace(regex, correct);
@@ -133,7 +127,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
     return correctedText;
   };
 
-  // Arama önerileri getir
   const fetchSuggestions = async (searchQuery: string) => {
     if (searchQuery.length < 2) {
       setSuggestions([]);
@@ -142,7 +135,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
 
     setIsLoading(true);
     try {
-      // Yazım hatası düzeltmesi uygula
       const correctedQuery = correctTypos(searchQuery);
       
       const response = await tmdbApi.searchMulti(correctedQuery, 1);
@@ -168,7 +160,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
     }
   };
 
-  // Debounced search
   useEffect(() => {
     if (debounceRef.current !== null) {
       clearTimeout(debounceRef.current);
@@ -186,7 +177,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
     };
   }, [query]);
 
-  // Dışarı tıklama kontrolü
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -234,8 +224,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Görsel arama için placeholder - gerçek implementasyon için
-      // Google Vision API veya benzeri bir servis kullanılabilir
       console.log('Görsel arama:', file);
       alert('Görsel arama özelliği yakında eklenecek!');
     }
@@ -279,7 +267,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
           />
 
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-            {/* Görsel Arama */}
             <label className="cursor-pointer p-2 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-gray-700">
               <Camera size={18} />
               <input
@@ -290,7 +277,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
               />
             </label>
 
-            {/* Sesli Arama */}
             {recognition && (
               <button
                 type="button"
@@ -306,7 +292,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
               </button>
             )}
 
-            {/* Temizle */}
             {query && (
               <button
                 type="button"
@@ -320,7 +305,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
           </div>
         </div>
 
-        {/* Sesli arama göstergesi */}
         {isListening && (
           <div className="absolute top-full left-0 right-0 mt-1 p-2 bg-red-500/20 border border-red-500/30 rounded-lg">
             <div className="flex items-center gap-2 text-red-400">
@@ -331,7 +315,6 @@ const SmartSearch: React.FC<SmartSearchProps> = ({ onItemClick, onSearchPageClic
         )}
       </form>
 
-      {/* Arama Önerileri */}
       {showSuggestions && (suggestions.length > 0 || isLoading) && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
           {isLoading ? (

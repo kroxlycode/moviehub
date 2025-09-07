@@ -32,7 +32,6 @@ function InfiniteScroll<T extends { id: number }>({
   const observerRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
 
-  // Load data function
   const loadData = useCallback(async (pageNum: number, reset = false) => {
     if (loading) return;
     
@@ -58,7 +57,6 @@ function InfiniteScroll<T extends { id: number }>({
     }
   }, [fetchData, loading]);
 
-  // Initial load
   useEffect(() => {
     if (isInitialLoad.current) {
       loadData(initialPage, true);
@@ -66,7 +64,6 @@ function InfiniteScroll<T extends { id: number }>({
     }
   }, [loadData, initialPage]);
 
-  // Intersection Observer for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -92,7 +89,6 @@ function InfiniteScroll<T extends { id: number }>({
     };
   }, [hasMore, loading, page, loadData, threshold]);
 
-  // Reset function for external use
   const reset = useCallback(() => {
     setItems([]);
     setPage(initialPage);
@@ -101,7 +97,6 @@ function InfiniteScroll<T extends { id: number }>({
     isInitialLoad.current = true;
   }, [initialPage]);
 
-  // Reset function is available via ref if needed
 
   if (error) {
     return (

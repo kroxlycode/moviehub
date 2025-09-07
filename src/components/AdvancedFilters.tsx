@@ -48,7 +48,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     { value: 'title.desc', label: 'Alfabetik (Z → A)' }
   ];
 
-  // Türleri yükle
   useEffect(() => {
     const fetchGenres = async () => {
       try {
@@ -64,7 +63,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     fetchGenres();
   }, [mediaType]);
 
-  // Filtre değişikliklerini parent'a bildir
   useEffect(() => {
     onFiltersChange(filters);
   }, [filters, onFiltersChange]);

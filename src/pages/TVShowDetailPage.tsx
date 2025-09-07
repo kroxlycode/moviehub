@@ -26,7 +26,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
   const [activeTab, setActiveTab] = useState<'overview' | 'seasons' | 'cast' | 'crew' | 'similar' | 'media' | 'watch'>('overview');
   const [expandedSeasons, setExpandedSeasons] = useState<Set<number>>(new Set());
 
-  // Set SEO metadata
   useSeo({
     title: tvShow ? `${tvShow.name} (${tvShow.first_air_date ? new Date(tvShow.first_air_date).getFullYear() : ''}${tvShow.last_air_date && tvShow.first_air_date !== tvShow.last_air_date ? `-${new Date(tvShow.last_air_date).getFullYear()}` : ''})` : 'Dizi Detayı',
     description: tvShow ? `${tvShow.name} dizisi hakkında detaylı bilgiler, oyuncu kadrosu, sezonlar, bölümler ve daha fazlası. ${tvShow.tagline || ''}` : 'Dizi detay sayfası',
@@ -126,9 +125,7 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <div className="relative">
-        {/* Background Image */}
         <div className="absolute inset-0">
           <LazyImage
             src={getImageUrl(tvShow.backdrop_path, 'backdrop', 'large')}
@@ -138,11 +135,9 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
           <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/80 to-dark/40"></div>
         </div>
 
-        {/* Content */}
         <div className="relative z-10 pt-20 pb-12">
           <div className="container mx-auto px-4">
             <FadeIn>
-            {/* Back Button */}
             <button
               onClick={onBack}
               className="flex items-center space-x-2 text-white hover:text-secondary transition-colors mb-8"
@@ -152,7 +147,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
             </button>
 
             <div className="flex flex-col lg:flex-row gap-8">
-              {/* Poster */}
               <SlideInLeft className="flex-shrink-0">
                 <CardHover>
                   <LazyImage
@@ -162,8 +156,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   />
                 </CardHover>
               </SlideInLeft>
-
-              {/* TV Show Info */}
               <SlideInRight className="flex-1 text-white">
                 <h1 className="text-4xl lg:text-5xl font-bold mb-4">{tvShow.name}</h1>
                 
@@ -171,7 +163,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   <p className="text-xl text-gray-300 italic mb-6">{tvShow.tagline}</p>
                 )}
 
-                {/* Rating & Info */}
                 <div className="flex flex-wrap items-center gap-4 mb-6">
                   <div className="flex items-center space-x-1 bg-yellow-500/20 px-3 py-1 rounded-full">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
@@ -197,7 +188,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   </div>
                 </div>
 
-                {/* Status & Season Info */}
                 <div className="flex flex-wrap items-center gap-4 mb-6">
                   <span className={`px-3 py-1 rounded-full text-sm ${
                     tvShow.status === 'Returning Series' 
@@ -215,7 +205,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   </span>
                 </div>
 
-                {/* Genres */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {tvShow.genres.map((genre) => (
                     <span
@@ -227,7 +216,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   ))}
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 mb-8">
                   <button
                     onClick={() => onPlayTrailer(tvShow as TVShow)}
@@ -243,13 +231,11 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
                   </button>
                 </div>
 
-                {/* Overview */}
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold mb-3">Özet</h3>
                   <p className="text-gray-300 leading-relaxed">{tvShow.overview}</p>
                 </div>
 
-                {/* Additional Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-400">Durum:</span>
@@ -277,7 +263,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
         </div>
       </div>
 
-      {/* Tabs Section */}
       <div className="bg-dark/50 backdrop-blur-sm border-t border-gray-700">
         <div className="container mx-auto px-4">
           <div className="flex space-x-8 overflow-x-auto">
@@ -306,7 +291,6 @@ const TVShowDetailPage: React.FC<TVShowDetailPageProps> = ({ tvShowId, onBack, o
         </div>
       </div>
 
-      {/* Tab Content */}
       <div className="py-12">
         <div className="container mx-auto px-4">
           {activeTab === 'overview' && (

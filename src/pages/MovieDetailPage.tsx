@@ -25,10 +25,8 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'cast' | 'crew' | 'similar'>('overview');
   
-  // Use the useTrailer hook
   const { trailer, isModalOpen, openTrailer, closeTrailer } = useTrailer(movieId ? { id: movieId, title: movie?.title || '' } as any : null);
 
-  // Set SEO metadata
   useSeo({
     title: movie ? `${movie.title} (${new Date(movie.release_date).getFullYear()})` : 'Film Detayı',
     description: movie ? `${movie.title} filmi hakkında detaylı bilgiler, oyuncu kadrosu, yönetmen ve daha fazlası. ${movie.tagline || ''}` : 'Film detay sayfası',
@@ -36,7 +34,6 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     image: movie ? getImageUrl(movie.poster_path, 'poster', 'original') : undefined
   });
   
-  // Update trailer when movie changes
   useEffect(() => {
     if (movie) {
       openTrailer();
@@ -95,7 +92,6 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
         url: window.location.href,
       }).catch(console.error);
     } else {
-      // Fallback for browsers that don't support Web Share API
       navigator.clipboard.writeText(window.location.href);
       alert('Link copied to clipboard!');
     }
@@ -111,17 +107,12 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black p-8">
         <div className="animate-pulse space-y-8">
-          {/* Backdrop Skeleton */}
           <div className="h-96 bg-gray-800 rounded-xl"></div>
-          
-          {/* Content Skeleton */}
           <div className="flex flex-col md:flex-row gap-8">
-            {/* Poster Skeleton */}
             <div className="w-full md:w-1/3 lg:w-1/4">
               <div className="aspect-[2/3] bg-gray-800 rounded-xl"></div>
             </div>
             
-            {/* Details Skeleton */}
             <div className="flex-1 space-y-6">
               <div className="h-12 bg-gray-800 rounded w-3/4"></div>
               <div className="h-6 bg-gray-800 rounded w-1/2"></div>
@@ -184,7 +175,6 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     );
   }
 
-  // Format release date
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('tr-TR', {
       year: 'numeric',
@@ -193,10 +183,8 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     });
   };
 
-  // Get director from crew
   const director = crew.find(member => member.job === 'Director');
   
-  // Get writers from crew with unique IDs
   const writers = Array.from(new Map(
     crew
       .filter(member => 
@@ -207,12 +195,10 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
       .map(writer => [writer.id, writer])
   ).values()) as Crew[];
 
-  // Get genres as string
   const genresString = movie.genres?.map(genre => genre.name).join(', ') || '';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      {/* Backdrop Image */}
       <div
         className="relative h-96 w-full bg-cover bg-center bg-no-repeat bg-fixed"
         style={{
@@ -220,8 +206,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
-        
-        {/* Back Button */}
+      
         <button 
           onClick={handleBack}
           className="absolute top-4 left-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
@@ -231,10 +216,8 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
         </button>
       </div>
 
-      {/* Movie Content */}
       <div className="container mx-auto px-4 py-8 -mt-48 relative z-10">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Poster */}
           <div className="w-full md:w-1/3 lg:w-1/4 flex-shrink-0">
             <div className="relative group">
               <img
@@ -255,7 +238,6 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
               </button>
             </div>
             
-            {/* Quick Info */}
             <div className="mt-6 space-y-4">
               <div className="flex items-center space-x-2 text-sm text-gray-300">
                 <Calendar className="w-4 h-4 text-yellow-500" />
@@ -300,8 +282,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
               </div>
             </div>
           </div>
-          
-          {/* Main Content */}
+
           <div className="flex-1">
             <div className="mb-6">
               <h1 className="text-4xl font-bold mb-2">{movie.title}</h1>
@@ -309,7 +290,6 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                 <p className="text-xl text-gray-400 italic mb-4">"{movie.tagline}"</p>
               )}
               
-              {/* Trailer Button */}
               <div className="flex flex-wrap gap-4 mt-6 mb-8">
                 <button
                   onClick={handlePlayTrailer}
@@ -327,13 +307,11 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                 </button>
               </div>
               
-              {/* Overview */}
               <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-4">Özet</h2>
                 <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
               </div>
               
-              {/* Movie Details */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-900/50 p-6 rounded-xl">
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Film Detayları</h3>
@@ -425,7 +403,6 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
         </div>
       </div>
 
-      {/* Navigation Tabs */}
       <div className="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-20 border-b border-gray-800">
         <div className="container mx-auto px-4">
           <nav className="flex space-x-8">
@@ -463,12 +440,10 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
         </div>
       </div>
 
-      {/* Tab Content */}
       <div className="py-12 bg-gray-900/50">
         <div className="container mx-auto px-4">
           {activeTab === 'overview' && (
             <div className="space-y-8">
-              {/* Cast Section */}
               <div>
                 <h2 className="text-2xl font-bold mb-6">Başrol Oyuncuları</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -502,8 +477,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
                   </button>
                 </div>
               </div>
-              
-              {/* Videos Section */}
+
               {videos.length > 0 && (
                 <div>
                   <h2 className="text-2xl font-bold mb-6">Videolar</h2>

@@ -23,15 +23,11 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Find the best matching trailer based on language preference
   const findBestTrailer = () => {
     if (!videos || videos.length === 0) return null;
     
-    // Define language preferences in order of priority
     const preferredLangs = ['tr', 'en', ''];
     
-    // 1. Try to find an official trailer in preferred languages
     for (const lang of preferredLangs) {
       const officialInLang = videos.find(
         video => 
@@ -43,7 +39,6 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
       if (officialInLang) return officialInLang;
     }
     
-    // 2. Try to find any trailer
     return videos.find(video => video.type === 'Trailer') || videos[0] || null;
   };
 
@@ -51,13 +46,11 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
     ? { key: videoKey } 
     : findBestTrailer();
 
-  // Reset loading state when modal opens 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedTrailer?.key) {
       setIsLoading(true);
       setError(null);
-      // Force iframe to reload with the correct parameters
       if (iframeRef.current) {
         const baseUrl = `https://www.youtube.com/embed/${selectedTrailer.key}`;
         iframeRef.current.src = `${baseUrl}?autoplay=1&modestbranding=1&rel=0`;
@@ -77,11 +70,9 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
     }
   }, [isOpen, selectedTrailer]);
 
-  // Handle iframe load
   const handleIframeLoad = () => {
     setIsLoading(false);
     
-    // Ensure the YouTube embed doesn't redirect
     if (iframeRef.current) {
       const iframe = iframeRef.current;
       const src = iframe.src;
@@ -140,7 +131,6 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
         ref={modalRef}
         className="relative w-full max-w-4xl mx-4 bg-gray-900 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300"
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/20 to-secondary/20 border-b border-gray-700">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-red-600 rounded-lg">
@@ -163,7 +153,6 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
           </button>
         </div>
 
-        {/* Video Container */}
         <div className="relative aspect-video bg-black">
           {error ? (
             <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">

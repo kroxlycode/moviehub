@@ -33,7 +33,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
   return (
     <div className={`${cardWidth} flex-shrink-0 group cursor-pointer`}>
       <div className="relative overflow-hidden rounded-lg bg-gray-800 transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl">
-        {/* Poster Image */}
         <div className={`${aspectRatio} relative overflow-hidden`}>
           <img
             src={posterUrl}
@@ -46,10 +45,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
             }}
           />
           
-          {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {/* Play Button */}
           <button
             onClick={handlePlayTrailer}
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-secondary/90 hover:bg-secondary text-dark p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
@@ -57,7 +54,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
             <Play className="w-6 h-6 fill-current" />
           </button>
 
-          {/* Rating Badge */}
           <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full flex items-center space-x-1">
             <Star className="w-3 h-3 text-secondary fill-current" />
             <span className="text-white text-xs font-semibold">
@@ -65,13 +61,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
             </span>
           </div>
 
-          {/* Type Badge */}
           <div className="absolute top-2 left-2 bg-secondary/90 px-2 py-1 rounded text-dark text-xs font-semibold">
             {'title' in item ? 'Film' : 'Dizi'}
           </div>
         </div>
 
-        {/* Content */}
         <div 
           className="p-3 bg-gray-900/95 backdrop-blur-sm"
           onClick={() => onClick(item)}

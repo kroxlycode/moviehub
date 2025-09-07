@@ -56,7 +56,6 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="flex items-center justify-center space-x-2 py-8">
-      {/* Previous Button */}
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1 || loading}
@@ -65,7 +64,6 @@ const Pagination: React.FC<PaginationProps> = ({
         <ChevronLeft className="w-5 h-5" />
       </button>
 
-      {/* Page Numbers */}
       <div className="flex items-center space-x-1">
         {visiblePages.map((page, index) => {
           if (page === '...') {
@@ -99,7 +97,6 @@ const Pagination: React.FC<PaginationProps> = ({
         })}
       </div>
 
-      {/* Next Button */}
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages || loading}
@@ -107,8 +104,7 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         <ChevronRight className="w-5 h-5" />
       </button>
-
-      {/* Page Info */}
+      
       <div className="ml-4 text-gray-400 text-sm">
         Sayfa {currentPage} / {totalPages}
       </div>

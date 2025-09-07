@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
-// Import types and API
 import type { Movie, TVShow, Person, Video } from './services/tmdbApi';
 import { tmdbApi } from './services/tmdbApi';
-
-// Import contexts
 import { ContentLanguageProvider, useContentLanguage } from './contexts/LanguageContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-
-// Import pages
 import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
 import TVShowsPage from './pages/TVShowsPage';
@@ -19,15 +13,11 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import TVShowDetailPage from './pages/TVShowDetailPage';
 import PersonDetailPage from './pages/PersonDetailPage';
 import SearchResultsPage from './pages/SearchResultsPage';
-
-// Import components
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Layout from './components/Layout';
-
 import GitHubButton from './components/GitHubButton';
 
-// Wrapper components to handle route params
 const MovieDetailPageWrapper: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -51,7 +41,6 @@ const MovieDetailPageWrapper: React.FC = () => {
   
   if (!id) return null;
   
-  // Create a mock movie object with just the ID for the play trailer handler
   const movie: Movie = {
     id: parseInt(id),
     title: '',
@@ -101,7 +90,6 @@ const TVShowDetailPageWrapper: React.FC = () => {
   
   if (!id) return null;
   
-  // Create a mock TV show object with just the ID for the play trailer handler
   const tvShow: TVShow = {
     id: parseInt(id),
     name: '',
@@ -257,7 +245,7 @@ const App: React.FC = () => {
           path="/ara/:query" 
           element={
             <SearchResultsPage 
-              query={''} // This will be set by the route param
+              query={''} 
               onBack={() => navigate(-1)}
               onItemClick={handleItemClick}
               onPlayTrailer={handlePlayTrailer}

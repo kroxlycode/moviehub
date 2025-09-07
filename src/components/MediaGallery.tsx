@@ -39,30 +39,25 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ movieId, tvId, mediaType })
       try {
         const id = movieId || tvId!;
         
-        // Videoları al
         const videosResponse = mediaType === 'movie' 
           ? await tmdbApi.getMovieVideos(id)
           : await tmdbApi.getTVVideos(id);
         
-        // Fragmanları ve önemli videoları filtrele
         const filteredVideos = videosResponse.results.filter((video: Video) => 
           video.site === 'YouTube' && 
           (video.type === 'Trailer' || video.type === 'Teaser' || video.type === 'Clip')
         );
         setVideos(filteredVideos);
 
-        // Görselleri al
         const imagesResponse = await fetch(
           `https://api.themoviedb.org/3/${mediaType}/${id}/images?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
         );
         const imagesData = await imagesResponse.json();
         
-        // Backdrop ve poster görsellerini birleştir
         const allImages = [
           ...(imagesData.backdrops || []),
           ...(imagesData.posters || [])
-        ].slice(0, 20); // İlk 20 görseli al
-        
+        ].slice(0, 20); 
         setImages(allImages);
       } catch (error) {
         console.error('Medya galerisi yüklenirken hata:', error);
@@ -128,7 +123,6 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ movieId, tvId, mediaType })
       <div className="bg-gray-800 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Medya Galerisi</h3>
         
-        {/* Tab Navigation */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab('videos')}
@@ -158,7 +152,6 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ movieId, tvId, mediaType })
           </button>
         </div>
 
-        {/* Videos Tab */}
         {activeTab === 'videos' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {videos.map((video) => (
@@ -194,7 +187,6 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ movieId, tvId, mediaType })
           </div>
         )}
 
-        {/* Images Tab */}
         {activeTab === 'images' && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {images.map((image, index) => (
@@ -223,7 +215,6 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ movieId, tvId, mediaType })
         )}
       </div>
 
-      {/* Video Modal */}
       {selectedMedia && selectedMedia !== 'image-gallery' && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
           <div className="relative w-full max-w-4xl">
@@ -246,7 +237,6 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({ movieId, tvId, mediaType })
         </div>
       )}
 
-      {/* Image Gallery Modal */}
       {selectedMedia === 'image-gallery' && (
         <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
           <button

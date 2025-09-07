@@ -27,8 +27,6 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { scrollY } = useScroll();
-  
-  // Parallax transforms
   const backgroundY = useTransform(scrollY, [0, 500], [0, 150]);
   const textY = useTransform(scrollY, [0, 500], [0, 100]);
   const overlayOpacity = useTransform(scrollY, [0, 300], [0.4, 0.8]);
@@ -55,7 +53,6 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
 
   return (
     <div className="relative h-screen overflow-hidden">
-      {/* Background Image with Parallax */}
       <motion.div
         style={{ y: backgroundY }}
         className="absolute inset-0 w-full h-[120%]"
@@ -71,20 +68,17 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
         />
       </motion.div>
 
-      {/* Gradient Overlay with Parallax */}
       <motion.div
         style={{ opacity: overlayOpacity }}
         className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"
       />
 
-      {/* Content with Parallax */}
       <motion.div
         style={{ y: textY }}
         className="relative z-10 h-full flex items-center"
       >
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-2xl">
-            {/* Movie Title with TypeWriter Effect */}
             <FadeIn delay={0.2}>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
                 <TypeWriter 
@@ -95,7 +89,6 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
               </h1>
             </FadeIn>
 
-            {/* Movie Info */}
             <FadeIn delay={0.4}>
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex items-center gap-1 text-yellow-400">
@@ -113,14 +106,12 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
               </div>
             </FadeIn>
 
-            {/* Movie Overview */}
             <FadeIn delay={0.6}>
               <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed line-clamp-3">
                 {currentMovie.overview}
               </p>
             </FadeIn>
 
-            {/* Action Buttons */}
             <FadeIn delay={0.8}>
               <div className="flex flex-col sm:flex-row gap-4">
                 <motion.button
@@ -148,7 +139,6 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
         </div>
       </motion.div>
 
-      {/* Movie Indicators */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
         <div className="flex gap-2">
           {movies.slice(0, 5).map((_, index) => (
@@ -165,9 +155,7 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
         </div>
       </div>
 
-      {/* Floating Elements */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Floating Particles */}
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
@@ -189,7 +177,6 @@ const ParallaxHero: React.FC<ParallaxHeroProps> = ({
         ))}
       </div>
 
-      {/* Scroll Indicator */}
       <motion.div
         className="absolute bottom-8 right-8 text-white/60"
         animate={{ y: [0, 10, 0] }}

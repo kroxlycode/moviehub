@@ -37,7 +37,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
       setIsSearching(false);
       
       if (searchQuery.trim()) {
-        // Load actors from popular movies and TV shows
         const [moviesResponse, tvResponse] = await Promise.all([
           tmdbApi.getPopularMovies(),
           tmdbApi.getPopularTVShows()
@@ -46,7 +45,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
         const actorsFromContent: Person[] = [];
         const processedActorIds = new Set<number>();
         
-        // Get actors from popular movies
         for (const movie of moviesResponse.results.slice(0, 10)) {
           try {
             const credits = await tmdbApi.getMovieCredits(movie.id);
@@ -68,7 +66,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
           }
         }
         
-        // Get actors from popular TV shows
         for (const tvShow of tvResponse.results.slice(0, 10)) {
           try {
             const credits = await tmdbApi.getTVShowCredits(tvShow.id);
@@ -90,7 +87,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
           }
         }
         
-        // Sort by popularity and paginate
         const sortedActors = actorsFromContent
           .sort((a, b) => (b.known_for?.length || 0) - (a.known_for?.length || 0));
         
@@ -101,7 +97,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
         setActors(paginatedActors);
         setTotalPages(Math.ceil(sortedActors.length / 20));
       } else {
-        // Load popular actors
         const response = await tmdbApi.getPopularPeople(currentPage);
         setActors(response.results);
         setTotalPages(response.total_pages);
@@ -120,7 +115,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
       setIsSearching(true);
       
       const response = await tmdbApi.searchPeople(searchQuery, currentPage);
-      // Filter only actors
       const actorsOnly = response.results.filter(person => 
         person.known_for_department === 'Acting'
       );
@@ -152,7 +146,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
     const value = e.target.value;
     setSearchQuery(value);
     
-    // Auto-search when query is cleared
     if (!value.trim()) {
       setCurrentPage(1);
     }
@@ -166,20 +159,18 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Page Header */}
       <div className="flex items-center space-x-3 mb-8">
         <div className="bg-gradient-to-r from-secondary to-accent p-3 rounded-lg">
           <Users className="w-8 h-8 text-dark" />
         </div>
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white">People</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white">Oyuncular</h1>
           <p className="text-gray-400 mt-1">
-            Discover popular people and explore their filmographies
+            Popüler oyuncuları keşfedin ve filmograflarını araştırın
           </p>
         </div>
       </div>
 
-      {/* Search Bar and Layout Toggle */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
         <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
           <div className="relative">
@@ -202,7 +193,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
         <LayoutToggle layout={layout} onLayoutChange={setLayout} />
       </div>
 
-      {/* Results Info */}
       {!loading && actors.length > 0 && (
         <div className="mb-6">
           <p className="text-gray-400 text-sm">
@@ -211,7 +201,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
         </div>
       )}
 
-      {/* Actors Grid */}
       <GridLayout
         items={actors}
         onItemClick={handlePersonClick}
@@ -220,7 +209,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
         layout={layout}
       />
 
-      {/* Pagination */}
       {!loading && actors.length > 0 && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
@@ -230,7 +218,6 @@ const PeoplePage: React.FC<PeoplePageProps> = ({ onPersonClick }) => {
         />
       )}
 
-      {/* Empty State */}
       {!loading && actors.length === 0 && (
         <div className="text-center py-12">
           <Users className="w-16 h-16 text-gray-600 mx-auto mb-4" />

@@ -54,7 +54,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
         media_type: (item as any).media_type || 'movie'
       })) as SearchResult[];
 
-      // Filter by active tab
       if (activeTab !== 'all') {
         filteredResults = filteredResults.filter(item => item.media_type === activeTab);
       }
@@ -121,7 +120,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
       <div className="bg-gradient-to-r from-primary/20 to-secondary/20 border-b border-gray-custom/20">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center space-x-4 mb-4">
@@ -139,7 +137,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
             </div>
           </div>
 
-          {/* Tabs */}
           <div className="flex space-x-1 bg-dark/50 rounded-lg p-1">
             {tabs.map((tab) => (
               <button
@@ -164,7 +161,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
         </div>
       </div>
 
-      {/* Results */}
       <div className="container mx-auto px-4 py-8">
         {loading ? (
           <div className="flex justify-center items-center py-20">
@@ -187,7 +183,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
                 vote_average: result.vote_average || 0,
                 overview: result.overview || '',
                 known_for_department: result.known_for_department || '',
-                // Required fields for type compatibility
                 backdrop_path: null,
                 vote_count: 0,
                 genre_ids: [],
@@ -208,7 +203,6 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
               type={activeTab === 'person' ? 'person' : 'movie'}
             />
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-12 flex justify-center">
                 <Pagination

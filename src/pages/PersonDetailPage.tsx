@@ -26,7 +26,6 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Set SEO metadata
   useSeo({
     title: person ? person.name : 'Oyuncu Profili',
     description: person ? `${person.name} hakkında detaylı bilgiler, oynadığı filmler ve diziler. ${person.biography ? person.biography.substring(0, 150) + '...' : ''}` : 'Oyuncu profili sayfası',
@@ -46,10 +45,7 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
         setLoading(true);
         setError(null);
         
-        // Fetch person details
         const personData = await tmdbApi.getPersonDetails(personId);
-        
-        // Fetch movie and TV credits in parallel
         const [movieCredits, tvCredits] = await Promise.all([
           tmdbApi.getPersonMovieCredits(personId).catch(err => {
             console.error('Error fetching movie credits:', err);
@@ -63,7 +59,6 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
         
         setPerson(personData);
         
-        // Process movie credits
         const personMovies = (movieCredits?.cast || [])
           .map((movie: Movie) => ({
             ...movie,
@@ -77,7 +72,6 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
             return dateB.getTime() - dateA.getTime();
           });
         
-        // Process TV show credits
         const personTVShows = (tvCredits?.cast || [])
           .map((show: TVShow) => ({
             ...show,
@@ -162,7 +156,6 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
           <ArrowLeft className="mr-2" /> Geri Dön
         </button>
         
-        {/* Person Header */}
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="w-full md:w-1/3 lg:w-1/4">
             {person.profile_path ? (
@@ -222,7 +215,6 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
           </div>
         </div>
         
-        {/* Filmler */}
         {movies.length > 0 && (
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Filmler</h2>
@@ -252,7 +244,6 @@ const PersonDetailPage: React.FC<PersonDetailPageProps> = ({ personId, onBack })
           </div>
         )}
         
-        {/* Diziler */}
         {tvShows.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Diziler</h2>

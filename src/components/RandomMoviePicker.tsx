@@ -37,23 +37,20 @@ const RandomMoviePicker: React.FC<RandomMoviePickerProps> = ({ onItemClick }) =>
   const getRandomItem = async () => {
     setIsLoading(true);
     try {
-      // Rastgele sayfa seç (1-20 arası)
       const randomPage = Math.floor(Math.random() * 20) + 1;
       
       let response;
       if (selectedGenre) {
-        // Tür bazlı arama
         const params = {
           page: randomPage,
           with_genres: selectedGenre,
           sort_by: 'popularity.desc',
-          vote_average_gte: 6.0 // En az 6.0 puan
+          vote_average_gte: 6.0
         };
         response = mediaType === 'movie' 
           ? await tmdbApi.discoverMovies(params)
           : await tmdbApi.discoverTVShows(params);
       } else {
-        // Popüler içerik
         response = mediaType === 'movie'
           ? await tmdbApi.getPopularMovies(randomPage)
           : await tmdbApi.getPopularTVShows(randomPage);
@@ -74,7 +71,6 @@ const RandomMoviePicker: React.FC<RandomMoviePickerProps> = ({ onItemClick }) =>
   const startRoulette = () => {
     setShowRoulette(true);
     
-    // Roulette animasyonu
     let spins = 0;
     const maxSpins = 20;
     const interval = setInterval(() => {
@@ -109,7 +105,6 @@ const RandomMoviePicker: React.FC<RandomMoviePickerProps> = ({ onItemClick }) =>
           </p>
         </div>
 
-        {/* Medya Tipi Seçimi */}
         <div className="flex justify-center gap-2">
           <button
             onClick={() => setMediaType('movie')}
@@ -133,7 +128,6 @@ const RandomMoviePicker: React.FC<RandomMoviePickerProps> = ({ onItemClick }) =>
           </button>
         </div>
 
-        {/* Tür Seçimi */}
         <div className="space-y-3">
           <div className="flex items-center justify-center gap-2 text-gray-300">
             <Filter size={16} />
@@ -168,7 +162,6 @@ const RandomMoviePicker: React.FC<RandomMoviePickerProps> = ({ onItemClick }) =>
           )}
         </div>
 
-        {/* Butonlar */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={getRandomItem}
@@ -207,7 +200,6 @@ const RandomMoviePicker: React.FC<RandomMoviePickerProps> = ({ onItemClick }) =>
           </button>
         </div>
 
-        {/* Roulette Göstergesi */}
         {showRoulette && selectedGenreName && (
           <div className="p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg border border-yellow-500/30">
             <div className="flex items-center justify-center gap-2 text-yellow-300">

@@ -24,13 +24,11 @@ class RateLimiter {
     const key = this.config.keyGenerator!(endpoint);
     const now = Date.now();
     
-    // Clean up expired records
     this.cleanup();
     
     const record = this.requests.get(key);
     
     if (!record) {
-      // First request for this key
       this.requests.set(key, {
         count: 1,
         resetTime: now + this.config.windowMs
@@ -44,7 +42,6 @@ class RateLimiter {
     }
     
     if (now >= record.resetTime) {
-      // Window has expired, reset
       this.requests.set(key, {
         count: 1,
         resetTime: now + this.config.windowMs
@@ -58,7 +55,6 @@ class RateLimiter {
     }
     
     if (record.count >= this.config.maxRequests) {
-      // Rate limit exceeded
       return {
         allowed: false,
         resetTime: record.resetTime,
@@ -66,7 +62,6 @@ class RateLimiter {
       };
     }
     
-    // Increment count
     record.count++;
     
     return {
@@ -111,25 +106,22 @@ class RateLimiter {
   }
 }
 
-// Create rate limiter instances for different API endpoints
 export const tmdbRateLimiter = new RateLimiter({
-  maxRequests: 40, // TMDB allows 40 requests per 10 seconds
-  windowMs: 10000, // 10 seconds
+  maxRequests: 40, 
+  windowMs: 10000, 
   keyGenerator: (endpoint: string) => `tmdb:${endpoint}`
 });
 
 export const generalRateLimiter = new RateLimiter({
   maxRequests: 100,
-  windowMs: 60000, // 1 minute
+  windowMs: 60000, 
   keyGenerator: (endpoint: string) => `general:${endpoint}`
 });
 
-// Utility function to add delay between requests
 export const addDelay = (ms: number): Promise<void> => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-// Rate limited fetch wrapper
 export const rateLimitedFetch = async (
   url: string, 
   options?: RequestInit,
@@ -147,7 +139,6 @@ export const rateLimitedFetch = async (
   try {
     const response = await fetch(url, options);
     
-    // Add small delay to prevent overwhelming the API
     await addDelay(100);
     
     return response;
@@ -157,7 +148,6 @@ export const rateLimitedFetch = async (
   }
 };
 
-// Hook for React components to check rate limit status
 export const useRateLimit = (endpoint: string, rateLimiter: RateLimiter = generalRateLimiter) => {
   const getStatus = () => rateLimiter.getStatus(endpoint);
   const reset = () => rateLimiter.reset(endpoint);
