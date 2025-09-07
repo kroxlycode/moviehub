@@ -25,6 +25,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Layout from './components/Layout';
 
+import GitHubButton from './components/GitHubButton';
+
 // Wrapper components to handle route params
 const MovieDetailPageWrapper: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -273,6 +275,7 @@ const AppWithProviders: React.FC = () => (
     <ThemeProvider>
       <ContentLanguageProvider>
         <App />
+        <GitHubButton />
       </ContentLanguageProvider>
     </ThemeProvider>
   </Router>

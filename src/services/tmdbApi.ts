@@ -162,6 +162,20 @@ export interface MovieDetails extends Movie {
   production_countries: any[];
   spoken_languages: any[];
   imdb_id: string;
+  videos?: {
+    results: Video[];
+  };
+}
+
+export interface Crew {
+  id: number;
+  credit_id: string;
+  name: string;
+  job: string;
+  department: string;
+  profile_path: string | null;
+  gender: number;
+  popularity: number;
 }
 
 export interface TVDetails extends TVShow {
@@ -189,6 +203,7 @@ export interface Cast {
 
 export interface Crew {
   id: number;
+  credit_id: string;
   name: string;
   job: string;
   department: string;
