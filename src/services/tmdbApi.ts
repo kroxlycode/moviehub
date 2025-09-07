@@ -141,6 +141,9 @@ export interface Video {
   type: string;
   official: boolean;
   published_at: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  size?: number;
 }
 
 export interface VideosResponse {
@@ -174,16 +177,6 @@ export interface TVDetails extends TVShow {
   seasons: any[];
   status: string;
   type: string;
-}
-
-export interface Video {
-  id: string;
-  key: string;
-  name: string;
-  site: string;
-  type: string;
-  official: boolean;
-  published_at: string;
 }
 
 export interface Cast {
@@ -490,46 +483,100 @@ export const tmdbApi = {
     }
   },
 
-  // Get movie videos (trailers) with language preference
-  getMovieVideos: async (movieId: number): Promise<VideosResponse> => {
-    // Try to get videos in current language first, then fallback to all videos
-    if (currentApiLanguage === 'tr-TR') {
-      try {
-        const turkishResponse = await fetch(buildUrl(`/movie/${movieId}/videos`, { language: currentApiLanguage }));
-        const turkishData = await turkishResponse.json();
-        
-        if (turkishData.results && turkishData.results.length > 0) {
-          return turkishData;
-        }
-      } catch (error) {
-        console.log('Turkish videos not available, falling back to default');
+  // Get movie videos (trailers) with language preference and fallback to English
+  async getMovieVideos(movieId: number): Promise<VideosResponse> {
+    // First try with the current language
+    const currentLang = currentApiLanguage;
+    const enUrl = buildUrl(`/movie/${movieId}/videos`, {
+      language: 'en-US',
+    });
+
+    try {
+      // Try with current language first
+      const url = buildUrl(`/movie/${movieId}/videos`, {
+        language: currentLang,
+      });
+      
+      const response = await fetchWithRetry(url);
+      const data: VideosResponse = await response.json();
+      
+      // Filter for official trailers in the current language
+      const officialTrailers = data.results.filter(
+        (video) => video.type === 'Trailer' && video.official
+      );
+      
+      // If we found trailers in the current language, return them
+      if (officialTrailers.length > 0) {
+        return { ...data, results: officialTrailers };
       }
+      
+      // If no trailers in current language, try English
+      if (currentLang !== 'en-US') {
+        const enResponse = await fetchWithRetry(enUrl);
+        const enData: VideosResponse = await enResponse.json();
+        const enOfficialTrailers = enData.results.filter(
+          (video) => video.type === 'Trailer' && video.official
+        );
+        
+        // Return English trailers if found, otherwise return empty array
+        return enOfficialTrailers.length > 0 
+          ? { ...enData, results: enOfficialTrailers }
+          : { ...data, results: officialTrailers }; // return empty array if no trailers found at all
+      }
+      
+      return { ...data, results: officialTrailers };
+    } catch (error) {
+      console.error('Error fetching movie videos:', error);
+      return { id: movieId, results: [] };
     }
-    
-    // Fallback to default language videos
-    const response = await fetch(buildUrl(`/movie/${movieId}/videos`));
-    return response.json();
   },
 
-  // Get TV show videos (trailers) with language preference
-  getTVVideos: async (tvId: number): Promise<VideosResponse> => {
-    // Try to get videos in current language first, then fallback to all videos
-    if (currentApiLanguage === 'tr-TR') {
-      try {
-        const turkishResponse = await fetch(buildUrl(`/tv/${tvId}/videos`, { language: currentApiLanguage }));
-        const turkishData = await turkishResponse.json();
-        
-        if (turkishData.results && turkishData.results.length > 0) {
-          return turkishData;
-        }
-      } catch (error) {
-        console.log('Turkish videos not available, falling back to default');
+  // Get TV show videos (trailers) with language preference and fallback to English
+  async getTVVideos(tvId: number): Promise<VideosResponse> {
+    // First try with the current language
+    const currentLang = currentApiLanguage;
+    const enUrl = buildUrl(`/tv/${tvId}/videos`, {
+      language: 'en-US',
+    });
+
+    try {
+      // Try with current language first
+      const url = buildUrl(`/tv/${tvId}/videos`, {
+        language: currentLang,
+      });
+      
+      const response = await fetchWithRetry(url);
+      const data: VideosResponse = await response.json();
+      
+      // Filter for official trailers in the current language
+      const officialTrailers = data.results.filter(
+        (video) => video.type === 'Trailer' && video.official
+      );
+      
+      // If we found trailers in the current language, return them
+      if (officialTrailers.length > 0) {
+        return { ...data, results: officialTrailers };
       }
+      
+      // If no trailers in current language, try English
+      if (currentLang !== 'en-US') {
+        const enResponse = await fetchWithRetry(enUrl);
+        const enData: VideosResponse = await enResponse.json();
+        const enOfficialTrailers = enData.results.filter(
+          (video) => video.type === 'Trailer' && video.official
+        );
+        
+        // Return English trailers if found, otherwise return empty array
+        return enOfficialTrailers.length > 0 
+          ? { ...enData, results: enOfficialTrailers }
+          : { ...data, results: officialTrailers }; // return empty array if no trailers found at all
+      }
+      
+      return { ...data, results: officialTrailers };
+    } catch (error) {
+      console.error('Error fetching TV show videos:', error);
+      return { id: tvId, results: [] };
     }
-    
-    // Fallback to default language videos
-    const response = await fetch(buildUrl(`/tv/${tvId}/videos`));
-    return response.json();
   },
 
   // TV Show Details
