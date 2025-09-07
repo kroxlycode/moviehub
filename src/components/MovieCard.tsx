@@ -7,13 +7,23 @@ import { useTrailer } from '../hooks/useTrailer';
 interface MovieCardProps {
   item: Movie | TVShow;
   onClick: (item: Movie | TVShow) => void;
+  onPlayTrailer?: (item: Movie | TVShow) => void;
   size?: 'small' | 'medium' | 'large';
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, size = 'medium' }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, size = 'medium' }) => {
   const [showTrailerButton, setShowTrailerButton] = useState(false);
   const { trailer, isModalOpen, openTrailer, closeTrailer } = useTrailer(item);
   const title = 'title' in item ? item.title : item.name;
+  
+  const handlePlayTrailer = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onPlayTrailer) {
+      onPlayTrailer(item);
+    } else {
+      openTrailer();
+    }
+  };
   const releaseDate = 'release_date' in item ? item.release_date : item.first_air_date;
   const posterUrl = getImageUrl(item.poster_path, 'poster', size === 'large' ? 'large' : 'medium');
 
@@ -41,10 +51,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, size = 'medium' })
           
           {/* Play Button */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              openTrailer();
-            }}
+            onClick={handlePlayTrailer}
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-secondary/90 hover:bg-secondary text-dark p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
           >
             <Play className="w-6 h-6 fill-current" />
