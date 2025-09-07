@@ -7,9 +7,10 @@ import { useTrailer } from '../hooks/useTrailer';
 interface HeroBannerProps {
   items: (Movie | TVShow)[];
   onItemClick: (item: Movie | TVShow) => void;
+  onPlayTrailer?: (item: Movie | TVShow) => void;
 }
 
-const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick }) => {
+const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrailer }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const currentItem = items[currentIndex];
@@ -38,6 +39,15 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick }) => {
   const goToSlide = (index: number) => {
     setIsAutoPlaying(false);
     setCurrentIndex(index);
+  };
+
+  const handlePlayTrailer = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onPlayTrailer) {
+      onPlayTrailer(currentItem);
+    } else {
+      openTrailer();
+    }
   };
 
   if (!items.length) {
