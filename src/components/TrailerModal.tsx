@@ -157,14 +157,16 @@ const TrailerModal: React.FC<TrailerModalProps> = ({
               )}
               <iframe
                 ref={iframeRef}
-                src={`https://www.youtube.com/embed/${selectedTrailer.key}?autoplay=1&rel=0&modestbranding=1&showinfo=0&cc_lang_pref=${language}&hl=${language}`}
+                src={`https://www.youtube-nocookie.com/embed/${selectedTrailer.key}?autoplay=1&mute=1&rel=0&modestbranding=1&showinfo=0&cc_lang_pref=${language}&hl=${language}&controls=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`}
                 title={`${title} Trailer`}
                 className={`w-full h-full ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
                 onLoad={handleIframeLoad}
                 onError={handleIframeError}
+                loading="eager"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
               />
             </>
           ) : (
