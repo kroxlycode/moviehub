@@ -4,6 +4,8 @@ import useSeo from '../hooks/useSeo';
 import { ArrowLeft, Play, Share2, Star, Calendar, Clock, Globe, Users, Film } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Movie, MovieDetails, Cast, Crew, tmdbApi, getImageUrl } from '../services/tmdbApi';
+import TrailerModal from '../components/TrailerModal';
+import { useTrailer } from '../hooks/useTrailer';
 
 interface MovieDetailPageProps {
   movieId: number;
@@ -19,8 +21,11 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   const [crew, setCrew] = useState<Crew[]>([]);
   const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'cast' | 'crew' | 'similar'>('overview');
-  const [trailerKey, setTrailerKey] = useState<string | null>(null);
+  
+  // Use the useTrailer hook
+  const { trailer, isModalOpen, openTrailer, closeTrailer } = useTrailer(movieId ? { id: movieId, title: movie?.title || '' } as any : null);
 
   // Set SEO metadata
   useSeo({
@@ -29,6 +34,13 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     type: 'video.movie',
     image: movie ? getImageUrl(movie.poster_path, 'poster', 'original') : undefined
   });
+  
+  // Update trailer when movie changes
+  useEffect(() => {
+    if (movie) {
+      openTrailer();
+    }
+  }, [movie]);
 
   useEffect(() => {
     if (movieId) {
@@ -40,20 +52,11 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     try {
       setLoading(true);
 
-      const [movieResponse, creditsResponse, similarResponse, videosResponse] = await Promise.all([
+      const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
         tmdbApi.getMovieDetails(movieId),
         tmdbApi.getMovieCredits(movieId),
-        tmdbApi.getSimilarMovies(movieId),
-        tmdbApi.getMovieVideos(movieId)
+        tmdbApi.getSimilarMovies(movieId)
       ]);
-
-      // Find trailer
-      const trailer = videosResponse.results.find(
-        (video: any) => video.type === 'Trailer' && video.site === 'YouTube'
-      );
-      if (trailer) {
-        setTrailerKey(trailer.key);
-      }
 
       setMovie(movieResponse);
       setCast(creditsResponse.cast.slice(0, 20));
@@ -68,11 +71,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
   };
 
   const handlePlayTrailer = () => {
-    if (trailerKey) {
-      window.open(`https://www.youtube.com/watch?v=${trailerKey}`, '_blank');
-    } else {
-      toast.info('Bu film için fragman bulunamadı');
-    }
+    openTrailer();
   };
 
   const handleBack = () => {
@@ -83,221 +82,66 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onPl
     }
   };
 
-  const handleShare = async () => {
-    const shareData = {
-      title: movie?.title || 'Film',
-      text: movie?.overview || '',
-      url: window.location.href,
-    };
-
+  const handleShare = () => {
+    if (!movie) return;
+    
     if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.error('Paylaşım hatası:', err);
-      }
+      navigator.share({
+        title: movie.title || 'Movie',
+        text: `Check out this movie: ${movie.title || ''}`,
+        url: window.location.href,
+      }).catch(console.error);
     } else {
       // Fallback for browsers that don't support Web Share API
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success('Bağlantı panoya kopyalandı!');
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
     }
   };
 
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours}s ${mins}dk`;
-  };
-
-  const formatBudget = (amount: number) => {
-    if (amount >= 1000000) {
-      return `$${(amount / 1000000).toFixed(1)}M`;
-    }
-    return `$${amount.toLocaleString()}`;
+    return `${hours}h ${mins}m`;
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-300">Film detayları yükleniyor...</p>
-        </div>
-      </div>
-    );
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   if (!movie) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-300 mb-4">Film bulunamadı</p>
-          <button
-            onClick={onBack}
-            className="px-6 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors"
-          >
-            Geri Dön
-          </button>
-        </div>
-      </div>
-    );
+    return <div>No movie found</div>;
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="relative">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src={getImageUrl(movie.backdrop_path, 'backdrop', 'large')}
-            alt={movie.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/80 to-dark/40"></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 pt-20 pb-12">
-          <div className="container mx-auto px-4">
-            {/* Back Button */}
-            <button
-              onClick={handleBack}
-              className="flex items-center space-x-2 text-white hover:text-secondary transition-colors mb-8"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Geri Dön</span>
-            </button>
-
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Poster */}
-              <div className="flex-shrink-0">
-                <img
-                  src={getImageUrl(movie.poster_path, 'poster', 'large')}
-                  alt={movie.title}
-                  className="w-80 h-auto rounded-2xl shadow-2xl mx-auto lg:mx-0"
-                />
-              </div>
-
-              {/* Movie Info */}
-              <div className="flex-1 text-white">
-                <h1 className="text-4xl lg:text-5xl font-bold mb-4">{movie.title}</h1>
-
-                {movie.tagline && (
-                  <p className="text-xl text-gray-300 italic mb-6">{movie.tagline}</p>
-                )}
-
-                {/* Rating & Info */}
-                <div className="flex flex-wrap items-center gap-4 mb-6">
-                  <div className="flex items-center space-x-1 bg-yellow-500/20 px-3 py-1 rounded-full">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="font-semibold">{movie.vote_average.toFixed(1)}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-1 text-gray-300">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(movie.release_date).getFullYear()}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-1 text-gray-300">
-                    <Clock className="w-4 h-4" />
-                    <span>{formatRuntime(movie.runtime)}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-1 text-gray-300">
-                    <Users className="w-4 h-4" />
-                    <span>{movie.vote_count.toLocaleString()} oy</span>
-                  </div>
-                </div>
-
-                {/* Genres */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {movie.genres.map((genre) => (
-                    <span
-                      key={genre.id}
-                      className="px-3 py-1 bg-yellow-500/20 text-primary border border-primary/30 rounded-full text-sm text-white font-semibold"
-                    >
-                      {genre.name}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4 mb-8">
-                  <button
-                    onClick={handlePlayTrailer}
-                    className="flex items-center space-x-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                    disabled={!trailerKey}
-                  >
-                    <Play className="w-5 h-5" />
-                    <span>Fragman İzle</span>
-                  </button>
-
-                  <button
-                    onClick={handleShare}
-                    className="flex items-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
-                  >
-                    <Share2 className="w-5 h-5" />
-                    <span>Paylaş</span>
-                  </button>
-                </div>
-
-                {/* Overview */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-3">Özet</h3>
-                  <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
-                </div>
-
-                {/* Additional Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-400">Durum:</span>
-                    <span className="ml-2 text-white">{movie.status}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400">Orijinal Dil:</span>
-                    <span className="ml-2 text-white">{movie.original_language.toUpperCase()}</span>
-                  </div>
-                  {movie.budget > 0 && (
-                    <div>
-                      <span className="text-gray-400">Bütçe:</span>
-                      <span className="ml-2 text-white">{formatBudget(movie.budget)}</span>
-                    </div>
-                  )}
-                  {movie.revenue > 0 && (
-                    <div>
-                      <span className="text-gray-400">Hasılat:</span>
-                      <span className="ml-2 text-white">{formatBudget(movie.revenue)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+      {/* Backdrop Image */}
+      <div
+        className="relative h-96 w-full bg-cover bg-center"
+        style={{
+          backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+        }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      {/* Tabs Section */}
-      <div className="bg-dark/50 backdrop-blur-sm border-t border-gray-700">
-        <div className="container mx-auto px-4">
-          <div className="flex space-x-8">
-            {[
-              { id: 'overview', label: 'Genel Bakış' },
-              { id: 'cast', label: 'Oyuncular' },
-              { id: 'crew', label: 'Ekip' },
-              { id: 'similar', label: 'Benzer Filmler' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`py-4 px-2 border-b-2 transition-colors ${activeTab === tab.id
-                    ? 'border-secondary text-secondary'
-                    : 'border-transparent text-gray-400 hover:text-white'
-                  }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+      {/* Movie Content */}
+      <div className="container mx-auto px-4 py-8 -mt-48 relative z-10">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Poster */}
+          <div className="w-full md:w-1/3 lg:w-1/4">
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              className="w-full rounded-lg shadow-2xl"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/placeholder-movie.png';
+              }}
+            />
           </div>
         </div>
       </div>

@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Star, Calendar, Play } from 'lucide-react';
 import { Movie, TVShow, getImageUrl } from '../services/tmdbApi';
+import TrailerModal from './TrailerModal';
+import { useTrailer } from '../hooks/useTrailer';
 
 interface MovieCardProps {
   item: Movie | TVShow;
   onClick: (item: Movie | TVShow) => void;
-  onPlayTrailer?: (item: Movie | TVShow) => void;
   size?: 'small' | 'medium' | 'large';
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, size = 'medium' }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, size = 'medium' }) => {
+  const [showTrailerButton, setShowTrailerButton] = useState(false);
+  const { trailer, isModalOpen, openTrailer, closeTrailer } = useTrailer(item);
   const title = 'title' in item ? item.title : item.name;
   const releaseDate = 'release_date' in item ? item.release_date : item.first_air_date;
   const posterUrl = getImageUrl(item.poster_path, 'poster', size === 'large' ? 'large' : 'medium');
@@ -37,17 +40,15 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Play Button */}
-          {onPlayTrailer && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onPlayTrailer(item);
-              }}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-secondary/90 hover:bg-secondary text-dark p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
-            >
-              <Play className="w-6 h-6 fill-current" />
-            </button>
-          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openTrailer();
+            }}
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-secondary/90 hover:bg-secondary text-dark p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+          >
+            <Play className="w-6 h-6 fill-current" />
+          </button>
 
           {/* Rating Badge */}
           <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full flex items-center space-x-1">
@@ -86,6 +87,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ item, onClick, onPlayTrailer, siz
           )}
         </div>
       </div>
+      
+      <TrailerModal
+        isOpen={isModalOpen}
+        onClose={closeTrailer}
+        videoKey={trailer?.key || null}
+        title={'title' in item ? item.title : item.name}
+      />
     </div>
   );
 };

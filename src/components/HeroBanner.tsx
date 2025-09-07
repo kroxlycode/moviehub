@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { ChevronLeft, ChevronRight, Play, Info, Star } from 'lucide-react';
 import { Movie, TVShow, getImageUrl } from '../services/tmdbApi';
+import TrailerModal from './TrailerModal';
+import { useTrailer } from '../hooks/useTrailer';
 
 interface HeroBannerProps {
   items: (Movie | TVShow)[];
   onItemClick: (item: Movie | TVShow) => void;
-  onPlayTrailer: (item: Movie | TVShow) => void;
 }
 
-const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrailer }) => {
+const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const currentItem = items[currentIndex];
+  const { trailer, isModalOpen, openTrailer, closeTrailer } = useTrailer(currentItem);
 
   useEffect(() => {
     if (!isAutoPlaying || items.length <= 1) return;
@@ -48,19 +51,19 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
     );
   }
 
-  const currentItem = items[currentIndex];
   const title = 'title' in currentItem ? currentItem.title : currentItem.name;
   const releaseDate = 'release_date' in currentItem ? currentItem.release_date : currentItem.first_air_date;
   const backdropUrl = getImageUrl(currentItem.backdrop_path, 'backdrop', 'large');
 
   return (
-    <div className="relative h-[70vh] overflow-hidden">
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-        style={{ backgroundImage: `url(${backdropUrl})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-overlay"></div>
-      </div>
+    <Fragment>
+      <div className="relative h-[70vh] overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
+          style={{ backgroundImage: `url(${backdropUrl})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-overlay"></div>
+        </div>
 
       <div className="relative z-10 h-full flex items-center">
         <div className="container mx-auto px-4">
@@ -92,7 +95,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
 
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => onPlayTrailer(currentItem)}
+                onClick={openTrailer}
                 className="flex items-center justify-center space-x-2 bg-secondary hover:bg-secondary/90 text-dark font-semibold px-8 py-3 rounded-lg transition-all duration-200 transform hover:scale-105"
               >
                 <Play className="w-5 h-5 fill-current" />
@@ -154,7 +157,15 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ items, onItemClick, onPlayTrail
           </div>
         </div>
       )}
-    </div>
+      </div>
+      
+      <TrailerModal
+        isOpen={isModalOpen}
+        onClose={closeTrailer}
+        videoKey={trailer?.key || null}
+        title={currentItem && 'title' in currentItem ? currentItem.title : currentItem?.name || 'Fragman'}
+      />
+    </Fragment>
   );
 };
 
