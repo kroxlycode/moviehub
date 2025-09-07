@@ -1,43 +1,42 @@
-# 🎬 MovieHub - Film & Dizi Keşif Platformu
+# MovieHub - Film & Dizi Keşif Platformu
 
 Modern ve kullanıcı dostu çok dilli film & dizi keşif platformu. TheMovieDB API kullanarak güncel içerikler sunar.
 
-![MovieHub Banner](https://via.placeholder.com/1200x400/1a1a2e/ffffff?text=MovieHub+-+Film+%26+Dizi+Platformu)
+![MovieHub Banner](https://moviehub.kroxly.dev/placeholder-image.png)
 
-## ✨ Özellikler
+## Özellikler
 
-### 🏠 Ana Sayfa
+### Ana Sayfa
 - **Hero Banner**: Trend olan filmler ve diziler
 - **Kategoriler**: Popüler, En Çok Oylanan, Vizyondaki, Yakında Gelenler
 - **Horizontal Scroll**: Kolay gezinme ve keşif
 
-### 📱 Sayfalar
+### Sayfalar
 - **Filmler**: Grid layout, gelişmiş filtreleme, pagination
 - **Diziler**: Grid layout, gelişmiş filtreleme, pagination  
 - **Aktörler**: Oyuncular ve yönetmenler
 
-### 🎭 Detay Sayfaları
+### Detay Sayfaları
 - **Film Detayları**: Tam bilgi, oyuncular, ekip, benzer filmler, fragman
 - **Dizi Detayları**: Sezonlar, bölümler, oyuncular, benzer diziler, fragman
 - **Kişi Detayları**: Filmografi ve biyografi *(yakında)*
 
-### 🔍 Arama & Filtreleme
+### Arama & Filtreleme
 - **Anlık Arama**: Dropdown sonuçlar ile hızlı erişim
 - **Gelişmiş Filtreler**: Tür, yıl, puan bazlı filtreleme
 - **Debounced Search**: Performans optimizasyonu
 
-### 🌍 Çok Dilli Destek
+### Çok Dilli Destek
 - **Türkçe/İngilizce**: Tam dil desteği
 - **API İçeriği**: Seçilen dilde film/dizi bilgileri
 - **UI Çevirileri**: Tüm arayüz metinleri
 
-### 🎥 Fragman Sistemi
+### Fragman Sistemi
 - **YouTube Entegrasyonu**: Yerleşik fragman oynatıcı
 - **Modal Tasarım**: Kesintisiz izleme deneyimi
 - **Keyboard Shortcuts**: ESC ile kapatma
 
-## 🛠️ Teknolojiler
-
+## Teknolojiler
 - **Frontend**: React 18 + TypeScript
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
@@ -45,7 +44,7 @@ Modern ve kullanıcı dostu çok dilli film & dizi keşif platformu. TheMovieDB 
 - **Build Tool**: Create React App
 - **State Management**: React Hooks + Context API
 
-## 🚀 Kurulum
+## Kurulum
 
 1. **Projeyi klonlayın**
 ```bash
@@ -73,7 +72,7 @@ npm start
 
 Uygulama http://localhost:3000 adresinde çalışacaktır.
 
-## 📁 Proje Yapısı
+## Proje Yapısı
 
 ```
 src/
@@ -102,7 +101,7 @@ src/
 └── types/               # TypeScript tipleri
 ```
 
-## 🎨 Tasarım Özellikleri
+## Tasarım Özellikleri
 
 - **Dark Theme**: Modern koyu tema
 - **Responsive**: Tüm cihazlarda uyumlu
@@ -110,13 +109,13 @@ src/
 - **Modern UI**: Gradient'ler, shadow'lar ve glassmorphism
 - **Accessibility**: Keyboard navigation ve ARIA labels
 
-## 📱 Responsive Tasarım
+## Responsive Tasarım
 
 - **Desktop (1200px+)**: Full özellikli deneyim
 - **Tablet (768px-1199px)**: Optimize edilmiş layout
 - **Mobile (320px-767px)**: Touch-friendly arayüz
 
-## 🔧 Geliştirme
+## Geliştirme
 
 ### Mevcut Komutlar
 
@@ -134,51 +133,38 @@ npm run eject      # CRA yapılandırmasını çıkar (dikkatli kullanın)
 - [x] Fragman sistemi
 - [x] Arama ve filtreleme
 - [x] Footer ve branding
-- [ ] Kişi detay sayfası
+- [x] Kişi detay sayfası
 - [ ] Kullanıcı listeleri (Watchlist, Favorites)
-- [ ] Arama sonuçları sayfası
+- [x] Arama sonuçları sayfası
 - [ ] PWA desteği
 - [ ] Dark/Light theme toggle
 
-### Katkıda Bulunma
-
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit edin (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
-## 📊 Performans
-
+## Performans
 - **Lazy Loading**: Resimler için optimize edilmiş yükleme
 - **Debounced Search**: API çağrılarını optimize eder
 - **Code Splitting**: Sayfa bazlı kod bölünmesi *(yakında)*
 - **Caching**: API yanıtları için akıllı önbellekleme *(yakında)*
 
-## 🌟 Ekran Görüntüleri
-
+## Ekran Görüntüleri
 ### Ana Sayfa
-![Ana Sayfa](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Ana+Sayfa+-+Hero+Banner+%26+Listss)
+![Ana Sayfa](https://i.hizliresim.com/95n6u6r.png)
 
 ### Film Detay
-![Film Detay](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Film+Detay+-+Tabs+%26+Info)
+![Film Detay](https://i.hizliresim.com/l0v9qy1.png)
 
-### Dil Seçimi
-![Dil Seçimi](https://via.placeholder.com/400x300/1a1a2e/ffffff?text=TR+%2F+EN+Language+Toggle)
-
-## 📄 Lisans
+## Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
-## 👨‍💻 Geliştirici
+## Geliştirici
 
 **Kroxly** - Web Designer & Developer 
 *React • TypeScript • Node.js*
 
-- 🌐 GitHub: [@kroxlycode](https://github.com/kroxlycode)
-- 📧 İletişim: GitHub profili üzerinden
+- GitHub: [@kroxlycode](https://github.com/kroxlycode)
+- İletişim: GitHub profili üzerinden / [kroxly.dev](https://kroxly.dev)
 
-## 🙏 Teşekkürler
+## Teşekkürler
 
 - [TheMovieDB](https://www.themoviedb.org/) - Kapsamlı film/dizi API'si
 - [Lucide](https://lucide.dev/) - Güzel ve tutarlı icon kütüphanesi
@@ -186,7 +172,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 - [React](https://reactjs.org/) - UI kütüphanesi
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 
-## 🚀 Deployment
+## Deployment
 
 Projeyi Netlify, Vercel veya GitHub Pages üzerinde kolayca deploy edebilirsiniz:
 
@@ -197,22 +183,20 @@ npm run build
 
 ---
 
-⭐ **Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!**
+**Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!**
 
-🔗 **Live Demo**: [MovieHub](https://moviehub-kroxly.netlify.app) *(yakında)*
+**Live Demo**: [MovieHub](https://moviehub.kroxly.dev)
 
 ---
 
-*Made with ❤️ by Kroxly*mıştır.
+*Made with ❤️ by Kroxly*
 
-## 🤝 Katkıda Bulunma
-
+## Katkıda Bulunma
 1. Fork edin
 2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
 3. Commit edin (`git commit -m 'Add amazing feature'`)
 4. Push edin (`git push origin feature/amazing-feature`)
 5. Pull Request açın
 
-## 📞 İletişim
-
+## İletişim
 Herhangi bir sorunuz varsa, lütfen issue açın veya iletişime geçin.
