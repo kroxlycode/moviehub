@@ -268,7 +268,7 @@ const buildUrl = (endpoint: string, params: Record<string, any> = {}): string =>
 };
 
 export const getImageUrl = (path: string | null, type: 'poster' | 'backdrop' | 'profile', size: string = 'medium'): string => {
-  if (!path) return '/placeholder-image.jpg';
+  if (!path) return '/placeholder-image.png';
   
   const sizeConfig = IMAGE_SIZES[type];
   const imageSize = sizeConfig[size as keyof typeof sizeConfig] || sizeConfig.medium;
