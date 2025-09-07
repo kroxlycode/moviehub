@@ -21,7 +21,7 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
     if (ogTitle) ogTitle.setAttribute('content', title || 'MovieHub | Film ve Dizi Dünyası');
     if (ogDescription) ogDescription.setAttribute('content', description || 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');
     if (ogUrl) ogUrl.setAttribute('content', window.location.href);
-    if (ogImage) ogImage.setAttribute('content', image || `${window.location.origin}/og-image.jpg`);
+    if (ogImage) ogImage.setAttribute('content', image || `${window.location.origin}/placeholder-image.png`);
     if (ogType) ogType.setAttribute('content', type);
 
     const twitterTitle = document.querySelector('meta[name="twitter:title"]');
@@ -30,7 +30,7 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
 
     if (twitterTitle) twitterTitle.setAttribute('content', title || 'MovieHub | Film ve Dizi Dünyası');
     if (twitterDescription) twitterDescription.setAttribute('content', description || 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');
-    if (twitterImage) twitterImage.setAttribute('content', image || `${window.location.origin}/twitter-image.jpg`);
+    if (twitterImage) twitterImage.setAttribute('content', image || `${window.location.origin}/placeholder-image.png`);
 
     const robotsMeta = document.querySelector('meta[name="robots"]');
     if (robotsMeta) {
@@ -51,11 +51,11 @@ const useSeo = ({ title, description, image, type = 'website', noIndex = false }
       if (ogTitle) ogTitle.setAttribute('content', 'MovieHub | Film ve Dizi Dünyası');
       if (ogDescription) ogDescription.setAttribute('content', 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');
       if (ogUrl) ogUrl.setAttribute('content', window.location.origin);
-      if (ogImage) ogImage.setAttribute('content', `${window.location.origin}/og-image.jpg`);
+      if (ogImage) ogImage.setAttribute('content', `${window.location.origin}/placeholder-image.png`);
       if (ogType) ogType.setAttribute('content', 'website');
       if (twitterTitle) twitterTitle.setAttribute('content', 'MovieHub | Film ve Dizi Dünyası');
       if (twitterDescription) twitterDescription.setAttribute('content', 'En güncel film ve dizi bilgileri, oyuncu kadroları, yorumlar ve daha fazlası');
-      if (twitterImage) twitterImage.setAttribute('content', `${window.location.origin}/twitter-image.jpg`);
+      if (twitterImage) twitterImage.setAttribute('content', `${window.location.origin}/placeholder-image.png`);
       if (robotsMeta) robotsMeta.setAttribute('content', 'index, follow');
     };
   }, [title, description, image, type, noIndex, pathname]);
