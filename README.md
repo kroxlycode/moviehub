@@ -174,7 +174,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## Deployment
 
-Projeyi Netlify, Vercel veya GitHub Pages üzerinde kolayca deploy edebilirsiniz:
+Projeyi Netlify veya GitHub Pages üzerinde kolayca deploy edebilirsiniz:
 
 ```bash
 npm run build
